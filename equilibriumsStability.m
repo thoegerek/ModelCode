@@ -37,7 +37,7 @@ for i = 1:length(eqsx)
         [~,lambdas] = eig(J(ax,ay,b,c,d,mu,tau,eqsx(i),eqsy(i)));
         if det(lambdas) < 0
             stability(i) = 0;
-        elseif lambdas(1) > 1
+        elseif lambdas(1) > 0
             stability(i) = 1;
         else
             stability(i) = -1;

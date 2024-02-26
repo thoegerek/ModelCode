@@ -5,54 +5,68 @@ Mu = linspace(minMu,maxMu,nump1);
 
 nump2 = 5;
 minlogAy = -6;
-maxlogAy = 0;%6;
+maxlogAy = 6;
 logAy = linspace(minlogAy,maxlogAy,nump2);
 Ay = exp(logAy);
 
 
-D = kron([1,3],10.^(-5:5));
+D = kron(10.^(-5:5),[1,3]);
+nump3 = length(D);
 
-prec = 300;
-tol = (1e-16)/prec^2;
+prec = 1000;
+tol = (1e-8)/prec^2;
 %%
 tic
-A = zeros(nump1,nump2);%ciritcal value
-B = length(D)*ones(nump1,nump2);%index of ciritcal value w.r.t. D
+A = zeros(nump1,nump2);
+B = zeros(nump1,nump2);
 C = zeros(nump1,nump2);
-E = zeros(nump1,nump2);
 for i = 1:nump1
     for j = 1:nump2
+        currprec = prec;
         X0 = [1-Mu(i),(1-Mu(i))/Ay(j)];
-        tau = linspace(0,sqrt(1-Mu(i)),prec);%.^2; %define grid (denser near 0) of possible tau values
-        prevst = [];
-        for k = B(i,min(nump2,j+1)):-1:1 %max(1,B(max(1,i-1),j)-2) goes from critical value of the pixel below (-2 for safety), until the max value (or the break)
-            [eq,st] = evolutionaryEq(@myModel,X0,1,Ay(j),1,1,D(k),Mu(i),tau,tol); %find eqs. for k
-            if ~isempty(eq(st==-1)>0) %If a stable interioir eq. exists, write k as the critical value
+        degree = 1;%+1.5^logAy(j); %Houristic for hitting all tau posibilities while still keeping prec down
+        tau = linspace(0,(1-Mu(i))^(1/degree),currprec).^degree;
+        k = max(length(D),B(i,max(1,j-1)));
+        while k >= 1 && B(i,j) == 0
+            [eq,st] = evolutionaryEq(@myModel,X0,1,Ay(j),1,1,D(k),Mu(i),tau,tol);
+            if ~isempty(eq(st==-1)>0)
                 A(i,j) = D(k);
                 B(i,j) = k;
-                prevst = st;
-            else
-                steq = prevst==-1;
-                usteq = prevst~=-1;
-                if ~isempty(steq)
-                    [~,eqy,~] = equilibriumsStability(1,Ay(j),1,1,D(max(k-1,1)),Mu(i),steq(1),true);
-                    if length(eqy) > 2
-                        C(i,j) = 1;
-                    end
-                end
-                if ~isempty(usteq)
-                    [~,eqy,~] = equilibriumsStability(1,Ay(j),1,1,D(max(k-1,1)),Mu(i),usteq(1),true);
-                    if length(eqy) > 2
-                        E(i,j) = 1;
-                    end
-                end
+                C(i,j) = max(eq);
+                k = k-1;
+            end
+            if B(i,j) == 0
                 break;
+%                 currprec = currprec*3;
+%                 tau = linspace(0,(1-Mu(i)),currprec);
+%                 k = max(length(D),B(i,max(1,j-1)));
+%                 disp(['Failed to find value, increasing precision to ' num2str(currprec)])
+            else
+                disp(['ay: ' num2str(j) ' / ' num2str(nump2) ', mu: ' num2str(i) ' / ' num2str(nump1)])
             end
         end
-        disp(['ay: ' num2str(j) ' / ' num2str(nump2) ', mu: ' num2str(i) ' / ' num2str(nump1)])
     end
 end
 toc
+%%
+% E = zeros(nump1,nump2);
+% prec2 = 1000;
+% for i = 1:nump1
+%     for j = 1:nump2
+%         X0 = [1-Mu(i),(1-Mu(i))/Ay(j)];
+%         tau = linspace(0,C(i,j),prec2);
+%         for k = B(i,j):length(D)
+%             [eq,st] = evolutionaryEq(@myModel,X0,1,Ay(j),1,1,D(k),Mu(i),tau,tol);
+%             if ~isempty(eq(st==-1)>0)
+%                 [eqx,~,stx] = equilibriumsStability(1,Ay(j),1,1,D(k),Mu(i),eq(st==-1),true);
+%                 if length(eqx(stx==-1)) > 1
+%                     E(i,j) = eq(st==-1);
+%                 end
+%             end
+%         end
+%         disp(['ay: ' num2str(j) ' / ' num2str(nump2) ', mu: ' num2str(i) ' / ' num2str(nump1)])
+%     end
+% end
 %%
 pha.Mu = Mu;
 pha.Ay = Ay;

@@ -1,11 +1,18 @@
 M = linearisedInvader(false);
 
-ax = 0.01;
-ay = 0.01;
+% ax = 0.01;
+% ay = 0.01;
+% b = 1;
+% c = .1;
+% d = .1;
+% mu = .5;
+
+ax = .02;
+ay = .015;
 b = 1;
-c = .1;
-d = .1;
-mu = .5;
+c = 1;
+d = 1;
+mu = .24;
 
 nump2 = 100;
 maxAy = .02;
@@ -103,3 +110,17 @@ ylim([tau(1) tau(end)])
 zlabel('x* + y*')
 
 legend([p1,p2],{'Chosen strategy','Ideal strategy'},'location','ne')
+%%
+Ayts = 0.015;
+[~,Aytsind] = find(Ay == Ayts);
+figure(2)
+plot(tau,TotPop(:,Aytsind),'linewidth',1.5)
+hold on
+plot(pol(Aytsind),TotPop(polind(Aytsind),Aytsind),'r.','markersize',10)
+plot(mon(Aytsind),TotPop(monind(Aytsind),Aytsind),'m.','markersize',10)
+legend({'Total population','Chosen sociality','Ideal sociality'},'location','se')
+title(['d_{1} = ' num2str(Ayts)])
+ylabel('Population (n_{0} + n_{1})')
+xlabel('Sociality (\sigma)')
+xlim([0 max(tau)])
+ylim([0 max(TotPop(:,Aytsind))*1.2])

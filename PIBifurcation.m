@@ -1,20 +1,27 @@
-nump = 100;
+nump = 200;
 minD = 0;
-maxD = 1;
+maxD = 5;
 D = linspace(minD,maxD,nump);
 
-ax = 0.01;
-ay = 0.01;
+% ax = 0.01;
+% ay = 0.01;
+% b = 1;
+% c = .1;
+% d = .1;
+% mu = .5;
+
+ax = .02;
+ay = .015;
 b = 1;
-c = .1;
-d = .1;
-mu = .5;
+c = 1;
+d = 1;
+mu = .24;
 
 X0 = [(b-mu)/ax,(b-mu)/ay];
 
-uppercutoff = 1/2;
-prec1 = 30;
-prec2 = 15;
+uppercutoff = 1/6;
+prec1 = 50;
+prec2 = 150;
 
 tol = 0;%(1e-12)/(prec1+prec2)^2;
 %% 1st grid
@@ -25,7 +32,7 @@ dtau = ((b-mu)/c)/(prec1-1) * uppercutoff;
 tau = 0:dtau:(b-mu)/c *uppercutoff;
 
 for i = 1:nump
-    [eq,st] = evolutionaryEq(@myModel,X0,ax,ay,b,c,D(i),mu,tau,tol,0);
+    [eq,st] = evolutionaryEq(@myModel,X0,ax,ay,b,c,D(i),mu,tau,tol);
     if length(eq) > size(Eq,2)
         Eq = [Eq,inf*ones(nump,1)];
         St = [St,inf*ones(nump,1)];
@@ -105,6 +112,6 @@ figure(1)
 axis;
 hold on
 for i = 1:size(CEq,2)
-    plot(C(CSt(:,i)==1),CEq(CSt(:,i)==1,i),'m.')
-    plot(C(CSt(:,i)==-1),CEq(CSt(:,i)==-1,i),'k.')
+    plot(D(CSt(:,i)==1),CEq(CSt(:,i)==1,i),'m.')
+    plot(D(CSt(:,i)==-1),CEq(CSt(:,i)==-1,i),'k.')
 end

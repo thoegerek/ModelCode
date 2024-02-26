@@ -11,9 +11,9 @@ fyi = b - ay*(yr+yi) - c*taui - mu;
 Dr = d*taur*xr*(yr*taur + yi*taui);
 Di = d*taui*xi*(yr*taur + yi*taui);
 
-dxr = fxr*xr + (fyr + mu)*yr + Dr*(fxr-fyr);
+dxr = fxr*xr + max(0,(fyr + mu)*yr) + Dr*(fxr-fyr);
 dyr = -mu*yr + Dr*(fyr-fxr); 
-dxi = fxi*xi + (fyi + mu)*yi + Di*(fxi-fyi);
+dxi = fxi*xi + max(0,(fyi + mu)*yi) + Di*(fxi-fyi);
 dyi = -mu*yi + Di*(fyi-fxi);
 
 

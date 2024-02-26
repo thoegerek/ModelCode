@@ -1,82 +1,134 @@
 %%
-load('Invasion.mat')
+%load('Invasion.mat')
 load('PIP.mat')
-load('Bifurcation_tau.mat')
-load('PIP123.mat')
-load('PiB_d.mat')
-load('Pop_tau.mat')
-load('AXAY.mat')
-load('PiB_dimless.mat')
-load('Pha.mat');
-load('Hys.mat');
+ load('Bifurcation_tau.mat')
+% load('PIP123.mat')
+ load('PiB_d.mat')
+% load('Pop_tau.mat')
+% load('AXAY.mat')
+% load('PiB_dimless.mat')
+% load('Pha.mat');
+% load('Hys.mat');
 
 %% Pairwise invasability plot
 figure(1)
-imshow((pip.f>0),'xdata',pip.tau,'ydata',pip.tau,'InitialMagnification',10);
+imshow(((pip.f(:,:,1)<0)*2+(pip.f(:,:,2)<0))/3,'xdata',pip.tau,'ydata',pip.tau)
 set(gca,'visible','on','ydir','normal')
-xlabel('\sigma_{n}')
-ylabel('\sigma_{m}')
+xlabel('Sociality of prevailing population (\sigma_{n})','fontsize',12)
+ylabel('Sociality of mutant population (\sigma_{m})','fontsize',12)
 hold on
 dummy1 = plot(inf,inf,'squarek','markerfacecolor','k');
 dummy2 = plot(inf,inf,'squarek');
-seq = plot(pip.eqs(pip.stability<0),pip.eqs(pip.stability<0),'bo','markersize',10,'linewidth',2);
-ueq = plot(pip.eqs(pip.stability>=0),pip.eqs(pip.stability>=0),'ro','markersize',10,'linewidth',2);
-legend([dummy2,dummy1,seq,ueq],{'Positive invasion fitness','Negative invasion fitness','Stable equilibrium','Unstable equilibrium'})
+seq = plot(0,0,'o',pip.eqs(pip.stability<0),pip.eqs(pip.stability<0),'o','color',[0.1 0.4 0.95],'markersize',10,'linewidth',2);
+ueq = plot(pip.eqs(pip.stability>=0),pip.eqs(pip.stability>=0),'-o','color',[0.8500 0.3250 0.0980],'markersize',10,'linewidth',2);
+greensquare = plot(.2,.1,'square','color',[0.4660 0.6740 0.1880],'linewidth',5);
+legend([dummy1,dummy2,seq(1),ueq,greensquare],{'Positive invasion fitness','Negative invasion fitness','Stable equilibria',...
+    'Unstable equilibria','Case from figure 1'},'location','nw','fontsize',12)
+
+text(.0971,.13,'+(\div)','color','w')
+text(.1045,.125,'+','color','w')
+
+text(.0972,.08,'\div(+)')
+text(.1095,.07,'\div','fontsize',16)
+
+text(.04,.11,'\div','fontsize',24)
+text(.07,.03,'+','color','w','fontsize',24)
+text(.17,.06,'+','color','w','fontsize',24)
+
+
 
 %% Bifurcation in population eq.
 figure(2)
-p = plot(bif.tux,bif.ux,'.r',bif.tsx,bif.sx,'.k',bif.tuy,bif.uy,'.m',bif.tsy,bif.sy,'.b');
+
+%stax1 = 
+%stax2 =
+[ustax,ord] = sort(bif.ux);
+tustax = bif.tux(ord);
+tustax = tustax(ustax>0);
+ustax = ustax(ustax>0);
+%stay1 = 
+%stay2 =
+[ustay,ord] = sort(bif.uy);
+tustay = bif.tuy(ord);
+tustay = tustay(ustay>0);
+ustay = ustay(ustay>0);
+tustay = [max(tustax),tustay(end),tustay];
+ustay = [0;0;ustay];
+
+ymax = 45;
+
+plot(tustax,ustax,'--',bif.tsx,bif.sx,'.',tustay,ustay,'--',bif.tsy,bif.sy,'.','linewidth',1.5);
+colororder([
+    0.4660 0.6740 0.1880;
+    0.4660 0.6740 0.1880;
+    0.9290 0.6940 0.1250
+    0.9290 0.6940 0.1250]);
 hold on
-legend([p(2),p(1),p(4),p(3)],{'Stable n_{0}*','Unstable n_{0}*','Stable n_{1}*','Unstable n_{1}*'})
+xdum = plot(nan,nan,'-','color',[0.4660 0.6740 0.1880]);
+ydum = plot(nan,nan,'-','color',[0.9290 0.6940 0.1250]);
+dummy = plot(nan,nan,'k-',nan,nan,'k--',nan,nan,':');
+
+plot([min(tustay) min(tustay)],[0 ymax],':',[max(bif.tsy(bif.sy==0)) max(bif.tsy(bif.sy==0))],[0 ymax],':','color',[0.8500 0.3250 0.0980],'linewidth',.5)
+plot(pip.eqs(pip.stability<0),[0 ymax],':','color',[0.1 0.4 0.95],'linewidth',.5)
+
+legend([xdum(1),ydum(1),dummy(1),dummy(2),dummy(3)],{'Non-migrants','Migrants','Stable pop. equilibrium','Unstable pop. equilibrium','Sociality equilibria'},'location','sw')
 xlim([bif.tau(1) bif.tau(end)])
-xlabel('\sigma')
+xlabel('Sociality (\sigma)')
 ylabel('Populatoin size')
 
-
+set(gcf,'Position',[550 350 700 500])
 %% Bifurcation in strategy
 figure(3)
+ymin = -.01;
+ymax = .15;
 axis;
 hold on
-for i = 1:size(pib.eq,2)
-    plot(pib.d(pib.stability(:,i)==-1),pib.eq(pib.stability(:,i)==-1,i),'b-','linewidth',1.5)
-    plot(pib.d(pib.stability(:,i)==1),pib.eq(pib.stability(:,i)==1,i),'r--','linewidth',1.5)
+for i = size(pib.eq,2):-1:1
+    plot(pib.d(pib.stability(:,i)==-1),pib.eq(pib.stability(:,i)==-1,i),'-','linewidth',1.5,'color',[0.1 0.4 0.95]);
+    plot(pib.d(pib.stability(:,i)==1),pib.eq(pib.stability(:,i)==1,i),'--','linewidth',1.5,'color',[0.8500 0.3250 0.0980]);
 end
-abc = {'a','b','c'};
-for i = 1:length(ds)
-    plot([ds ds],[0 1],':k')
-    text(ds(i)+.007,0.993,abc(i))
-end
-plot([0.125 0.125],[0 1],':','color',[.7 .7 .7])
-xlim([0 1])
-ylim([0 1])
-xlabel('c')
-ylabel('\sigma')
-legend('Stable strategy equlibrium','Unstable strategy equilibrium','Points of reference')
+plot([0 max(pib.d)],[0 0],'-','linewidth',1.5,'color',[0.1 0.4 0.95]);
 
+plot([pips.d pips.d],[ymin ymax],':','color',[.7 .7 .7])
+text(pips.d+.005,.04,'-figure 5 (top-left)','color',[.5 .5 .5])
 
-%% Pip of 3 scenarios
+plot([1 1],[ymin ymax],':','color',[.7 .7 .7])
+text(1+.005,.03,'-figure 2','color',[.5 .5 .5])
+
+xlim([0 5])
+ylim([ymin ymax])
+xlabel('Learning rate coefficient (c)')
+ylabel('Sociality (\sigma)')
+legend('Stable strategy equlibrium','Unstable strategy equilibrium')
+
+set(gcf,'Position',[550 350 700 500])
+%% Pip of 4 scenarios
 fig = figure(4);
-pip123 = {pip1,pip2,pip3};
-for i = 1:3
-    subplot(1,3,i)
-    imshow((pip123{i}.f>0),'xdata',pip123{i}.tau,'ydata',pip123{i}.tau,'InitialMagnification',10);
+pip123 = {pip1,pip2;pip3,pip4};
+for i = 1:2
+    for j = 1:2
+        ind = (i-1)*2+j;
+    subplot(2,2,ind)
+    imshow(((pip123{i,j}.f(:,:,1)<0)*2+(pip123{i,j}.f(:,:,2)<0))/3,'xdata',pip123{i,j}.tau,'ydata',pip123{i,j}.tau,'InitialMagnification',10);
     set(gca,'visible','on','ydir','normal')
-    text(0.1,1.5,abc(i),'color','w')
-    xlabel('\sigma_{n}')
-    if i == 1
+    text(.01,.205,['\mu = ' num2str(pips.mus(ind))])
+    text(.01,.185,['d_{1} = ' num2str(pips.ays(ind))])
+    if i == 2
+        xlabel('\sigma_{n}')
+    end
+    if j == 1
         ylabel('\sigma_{m}')
     end
     hold on
     dummy1 = plot(inf,inf,'squarek','markerfacecolor','k');
     dummy2 = plot(inf,inf,'squarek');
-    seq = plot(pip123{i}.eqs(pip123{i}.stability<0),pip123{i}.eqs(pip123{i}.stability<0),'bo','markersize',5,'linewidth',1.5);
-    ueq = plot(pip123{i}.eqs(pip123{i}.stability>=0),pip123{i}.eqs(pip123{i}.stability>=0),'ro','markersize',5,'linewidth',1.5);
-    if i ==2
-        legend([dummy2,dummy1,seq,ueq],{'Positive invasion fitness','Negative invasion fitness','Stable equilibrium','Unstable equilibrium'})
+    %seq = plot(pip123{i}.eqs(pip123{i}.stability<0),pip123{i}.eqs(pip123{i}.stability<0),'bo','markersize',5,'linewidth',1.5);
+    %ueq = plot(pip123{i}.eqs(pip123{i}.stability>=0),pip123{i}.eqs(pip123{i}.stability>=0),'ro','markersize',5,'linewidth',1.5);
     end
 end
-
-
+set(gcf,'Position',[550 350 700 700])
+lg = legend([dummy2,dummy1],{'Positive invasion fitness','Negative invasion fitness'});
+lg.Position = [.5 .5 0 0];
 %% Population for varied ay and tau
 nump1 = length(popt.tau);
 nump2 = length(popt.ax);

@@ -1,10 +1,11 @@
 M = linearisedInvader(false);
-ax = .01;
-ay = .001;
+ax = .02;
+ay = .015;
 b = 1;
-c = .125;
-d = .125;
-mu = .5;
+c = 1;
+d = 1;
+mu = .24;
+
 
 % ax = .01;
 % ay = .01;
@@ -16,13 +17,11 @@ mu = .5;
 X0 = [[(b-mu)/ax,(b-mu)/ay];
     [(b-mu)/ax,1]];
 O = size(X0,2);
-
-%[~,X] = ode45(@myModel,[0 1000],X0,[],ax,ay,b,c,d,mu,0.25);
 %%
 nump = 200;
 f = zeros(nump,O);
 flow = zeros(nump);
-uppercutoff = 1/3;
+uppercutoff = 1/3.5;
 dtau = ((b-mu)/c)/(nump-1) * uppercutoff;
 tau = 0:dtau:(b-mu)/c *uppercutoff;
 
@@ -60,15 +59,27 @@ stability = [stability stab + 1 - 2*(stab>0)];
 end
 
 %%
-% pip1.data = {ax,ay,b,c,d,mu,X0};
-% pip1.dataDesc = {'ax','ay','b','c','d','mu','X0'};
-% pip1.tau = tau;
-% pip1.X = X;
-% pip1.f = f;
-% pip1.eqs = eqs;
-% pip1.stability = stability;
-% ds = [.06;.1;.15];
-% save('PIP123.mat','pip1','pip2','pip3','ds');
+%  pip.data = {ax,ay,b,c,d,mu,X0};
+%  pip.dataDesc = {'ax','ay','b','c','d','mu','X0'};
+%  pip.tau = tau;
+%  pip.X = X;
+%  pip.f = f;
+%  pip.eqs = eqs;
+%  pip.stability = stability;
+%  ds = [.06;.1;.15];
+%  save('PIP.mat','pip');
+
+pip4.data = {ax,ay,b,c,d,mu,X0};
+pip4.dataDesc = {'ax','ay','b','c','d','mu','X0'};
+pip4.tau = tau;
+pip4.X = X;
+pip4.f = f;
+pip4.eqs = eqs;
+pip4.stability = stability;
+% pips.d = .75;
+% pips.ays = [.015;.0125;.015;.0125]
+% pips.mus = [.24;.24;.22;.22]
+% save('PIP123.mat','pip1','pip2','pip3','pip4','pips');
 %%
 figure(1)
 imshow(((f(:,:,1)>0)*2+(f(:,:,2)>0))/3,'xdata',tau,'ydata',tau)

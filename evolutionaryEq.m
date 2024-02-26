@@ -21,11 +21,10 @@ for i = 2:length(tau)-1
         if length(St==-1) == 1
             X = Eq(St==-1);
         else %Repeat process (once) if needed
-            [~,X,SUCCESS] = runToSS(model,1,X0,20,1e-3,{ax,ay,b,c,d,mu,tau(i)});
+            [~,X,SUCCESS] = runToSS(model,1,X(end,:),20,1e-2,{ax,ay,b,c,d,mu,tau(i)});
             if ~SUCCESS
-                [~,idx] = max(X(:,1)); %If all fails, picks the highest eq. (Not justified robustly!)
+                [~,idx] = convergedEq(Eq(:,1),St,X(end,1)); %If all fails, find equilibria from 1-D convergence (not robust for 2-D)
                 X = [X(idx,1) X(idx,2)];
-                warning('Set the result to the largest stable equilibrium, but there were multiple!')
             end
         end
     end

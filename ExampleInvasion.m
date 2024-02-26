@@ -49,6 +49,3 @@ plot(T,sum(X,2),'k--','linewidth',1.5)
 legend('x_{\tau = 1.25}','y_{\tau = 1.25}','x_{\tau = .95}','y_{\tau = .95}','Total population')
 ylabel('Adult individuals')
 xlabel('Time [years]')
-%%
-X0 = [500,500];
-[T,X] = ode45(@myModel,[0 100],X0,[],ax,ay,b,c,d,mu,1.25);

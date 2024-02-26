@@ -1,12 +1,19 @@
-ax = 0.01;
-ay = 0.01;
-b = 1;
-c = .1;
-d = .125;
-mu = .5;
+% ax = 0.01;
+% ay = 0.01;
+% b = 1;
+% c = .1;
+% d = .125;
+% mu = .5;
 
-nump = 200;
-cutoff = 1/3;
+ax = .04;%.02;
+ay = .03;%.015;
+b = 1;
+c = 1;
+d = 2;%1;
+mu = .24;
+
+nump = 500;
+cutoff = 1/3.5;
 dtau = ((b-mu)/c)/(nump-1) * cutoff;
 tau = 0:dtau:(b-mu)/c *cutoff;
 %%
@@ -48,5 +55,5 @@ bif.uy = uy;
 bif.tuy = tuy;
 %save('Bifurcation_tau.mat','bif');
 %%
-figure(1)
+figure(3)
 plot(tsx,sx,'.k',tux,ux,'.r',tuy,uy,'.m',tsy,sy,'.b');

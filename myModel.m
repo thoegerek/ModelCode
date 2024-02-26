@@ -7,7 +7,7 @@ fy = b - ay*y -c*tau - mu;
 
 D = d*x*y*tau^2;
 
-dx = fx*x + (fy + mu)*y + D*(fx-fy);
+dx = fx*x + max((fy + mu)*y,0) + D*(fx-fy);
 dy = -mu*y + D*(fy-fx); 
 
 dX = [dx;dy];
