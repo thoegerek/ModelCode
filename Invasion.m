@@ -18,6 +18,17 @@ X02 = X1(end,:)' + [0;0;1;0];
 X03 = [X2(end,1); X2(end,2); X2(end,3); X2(end,4) - 15];
 [T3,X3] = ode15s(@myModelInvader,[0 500],X03,[],ax,ay,b,c,d,mu,taur,taui);
 %%
+inv.data = {ax,ay,b,c,d,mu,taur,taui,X01,X02,X03};
+inv.dataDesc = {'ax','ay','b','c','d','mu','taur','taui','X0','X02','X03'};
+inv.T1 = T1;
+inv.T2 = T2;
+inv.T3 = T3;
+inv.X1 = X1;
+inv.X2 = X2;
+inv.X3 = X3;
+%save('Invasion.mat','inv');
+
+%%
 figure(1)
 Tcat = [T1;T1(end)+T2;T1(end)+T2(end)+T3];
 Xcat = [X1;X2;X3];
@@ -39,6 +50,3 @@ ylim([.5 ymax])
 legend([plt(1),plt(2),plt(5)],{'Non-migrating population','Migrating population','Total population'},'position', [.35 .75 0 0] )
 xlabel('Time (years)')
 ylabel('Adult population number (1000s)')
-set(gcf,'Position',[550 350 700 500])
-%%
-export_fig('C:/Users/thekn/Pictures/Article1/PopDyn','-png','-transparent','-m5')
