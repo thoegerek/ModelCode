@@ -1,44 +1,30 @@
-ax = 0.01;
-ay = 0.01;
+ax = .02;
+ay = .015;
 b = 1;
-mu = .5;
+c = 1;
+d = 1;
+mu = .24;
 
-nump1 = 10;
-minD = .05;
-maxD = 1;
-D = linspace(minD,maxD,nump1);
+M = linearised(false);
 
-nump2 = 10;
-maxC = .1;
-minC = maxC/nump2;
-C = linspace(minC,maxC,nump2);
+Tau = .1:.001:.2;
 
-prec = 50;
-maxtau = 1;
-%%
-ny = cell(nump1,nump2);
-my = cell(nump1,nump2);
+%% This does not work!! find out why ?
 
-for i = 1:nump1
-    for j = 1:nump2
-        Tau = linspace(0,.25*(b-mu)/maxtau,prec);
-        ny{i,j} = zeros(prec,1);
-        for k = 1:prec
-            [eqx,eqy,st] = equilibriumsStability(ax,ay,b,C(j),D(i),mu,Tau(k),false);
-            ny{i,j}(k) = sum((st==-1));
-            my{i,j}(k) = sum((eqy>0).*(st==-1));
+tmp = zeros(length(Tau),1);
 
-            if mod(k,5) == 0
-                disp(['tau: ' num2str(k) ' / ' num2str(prec) ', C: ' num2str(j) ' / ' num2str(nump2) ', D: ' num2str(i) ' / ' num2str(nump1)])
-            end
-        end
+for i = 1:length(Tau)
+    [eqx,eqy,stability] = equilibriumsStability(ax,ay,b,c,d,mu,Tau(i),true);
+    eq1 = (eqy==0).*(eqx>0); 
+    eqx1 = eqx(logical(eq1));
+
+    lam = M(ax,ay,b,c,d,mu,.2,eqx1,0);
+    [vec,val] = eig(lam);
+
+    if -val(1,1) > val(2,2)*vec(1,2)
+        tmp(i) = -1;
+    else
+        tmp(i) = 1;
     end
-end
-%%
-A = zeros(nump1,nump2);
-for i = 1:nump1
-    for j = 1:nump2
-        A(i,j) = sum(ny{i,j});
-        B(i,j) = sum(my{i,j});
-    end
+    disp(['i = ' num2str(i) ' / ' num2str(length(Tau))])
 end

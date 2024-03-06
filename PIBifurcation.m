@@ -1,17 +1,15 @@
-nump = 200;
-minD = 0;
-maxD = 5;
-D = linspace(minD,maxD,nump);
+% nump = 250;
+% minD = 0.5;
+% maxD = 5;
+% degree = 3;
+% D = linspace(minD,maxD^(1/degree),nump).^degree;
 
-% ax = 0.01;
-% ay = 0.01;
-% b = 1;
-% c = .1;
-% d = .1;
-% mu = .5;
+
 
 ax = .02;
-ay = .015;
+%ay = .015;
+Ay = .0001:.0001:.05;
+nump = length(Ay);
 b = 1;
 c = 1;
 d = 1;
@@ -21,7 +19,7 @@ X0 = [(b-mu)/ax,(b-mu)/ay];
 
 uppercutoff = 1/6;
 prec1 = 50;
-prec2 = 150;
+prec2 = 50;%150;
 
 tol = 0;%(1e-12)/(prec1+prec2)^2;
 %% 1st grid
@@ -32,7 +30,7 @@ dtau = ((b-mu)/c)/(prec1-1) * uppercutoff;
 tau = 0:dtau:(b-mu)/c *uppercutoff;
 
 for i = 1:nump
-    [eq,st] = evolutionaryEq(@myModel,X0,ax,ay,b,c,D(i),mu,tau,tol);
+    [eq,st] = evolutionaryEq(@myModel,X0,ax,Ay(i),b,c,d,mu,tau,tol);
     if length(eq) > size(Eq,2)
         Eq = [Eq,inf*ones(nump,1)];
         St = [St,inf*ones(nump,1)];
@@ -50,7 +48,7 @@ for j = 1:W
     for i = 1:nump
         if Eq(i,j) < inf
         ptau = linspace(Eq(i,j)-dtau*2,Eq(i,j)+dtau*2,prec2);
-        [eq,st] = evolutionaryEq(@myModel,X0,ax,ay,b,c,D(i),mu,ptau,tol);
+        [eq,st] = evolutionaryEq(@myModel,X0,ax,Ay(i),b,c,d,mu,ptau,tol);
         if length(eq) > size(WEq,2)
             WEq = [WEq,inf*ones(nump*W,1)];
             WSt = [WSt,inf*ones(nump*W,1)];
@@ -112,6 +110,52 @@ figure(1)
 axis;
 hold on
 for i = 1:size(CEq,2)
-    plot(D(CSt(:,i)==1),CEq(CSt(:,i)==1,i),'m.')
-    plot(D(CSt(:,i)==-1),CEq(CSt(:,i)==-1,i),'k.')
+    plot(Ay(CSt(:,i)==1),CEq(CSt(:,i)==1,i),'m.')
+    plot(Ay(CSt(:,i)==-1),CEq(CSt(:,i)==-1,i),'k.')
+end
+%%
+%load('PiB_d.mat')
+%%
+Dtau = .001;
+Tau = min(pib.eq,[],'all'):Dtau:max(pib.eq(~isinf(pib.eq)),[],'all')*10;
+Bi = zeros(length(Tau),length(pib.d));
+for i = 1:length(Ay)
+    if sum(pib.stability(i,:)==-1)>0
+        onechance = false;
+        taustart = find(Tau-min(pib.eq(i,:)) > 1/(prec1*prec2),1);
+        for j = taustart:length(Tau)
+            [~,~,st] = equilibriumsStability(pib.data{1},Ay(i),pib.data{3},pib.data{4},d,pib.data{5},Tau(j),true);
+            if sum(st==-1) > 1
+                Bi(j,i) = 1;
+            else
+                if onechance
+                    break;
+                else
+                    onechance = true;
+                end
+            end
+            disp(['j = ' num2str(j) ' / ' num2str(length(Tau)) ' (i = ' num2str(i) ' / ' num2str(length(pib.d)) ' )'])
+        end
+    end
+end
+%%
+bis.eq = pib.eq;
+bis.stability = pib.stability;
+bis.data = {pib.data{1},pib.data{2},pib.data{3},pib.data{4},pib.data{5}};
+bis.dataDesc = {'ax','ay','b','c','mu'};
+bis.d = pib.d;
+bis.Tau = Tau;
+bis.Bi = Bi;
+%save('Bistability_d.mat','bis');
+%%
+pol = bwboundaries(Bi);
+figure(2)
+axis;
+hold on
+for i = 1:size(pib.eq,2)
+    plot(pib.d(pib.stability(:,i)==1),pib.eq(pib.stability(:,i)==1,i),'m.')
+    plot(pib.d(pib.stability(:,i)==-1),pib.eq(pib.stability(:,i)==-1,i),'k.')
+end
+for i = 1:length(pol)
+    patch(pib.d(pol{i}(:,2)),Tau(pol{i}(:,1)),'.r','facealpha',.2)
 end

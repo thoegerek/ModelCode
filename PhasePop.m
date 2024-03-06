@@ -33,7 +33,18 @@ for i = 1:nump1
         dy(j,i) = partial(2);
     end
 end
-
+%% Transparrent lines
+num2 = 50;
+rng(1)
+X0r = rand(num2)*Xspan(2);
+Y0r = rand(num2)*Yspan(2);
+XT = cell(num2);
+for i = 1:num2
+    for j = 1:num2
+        [~,XT{i,j}] = ode45(@myModel,Trange,[X0r(i,j);Y0r(i,j)],[],ax,ay,b,c,d,mu,tau);
+    end
+    disp([num2str(i) ' / ' num2str(num2) ' (2)'])
+end
 %% Solutions to define basins of attraction
 Trange = (0:.1:50).^2;
 
@@ -52,21 +63,6 @@ for i = 1:num1*2
     end
     disp([num2str(i) ' / ' num2str(2*num1) ' (1)'])
 end
-%% Transparrent lines
-num2 = 50;
-rng(1)
-X0r = rand(num2)*Xspan(2);
-Y0r = rand(num2)*Yspan(2);
-XT = cell(num2);
-tol = 1e-4;
-for i = 1:num2
-    for j = 1:num2
-        [~,XT{i,j}] = ode45(@myModel,Trange,[X0r(i,j);Y0r(i,j)],[],ax,ay,b,c,d,mu,tau);
-    end
-    disp([num2str(i) ' / ' num2str(num2) ' (2)'])
-end
-
-
 %% Find the Seperatrix between the two basins
 Saddle = [usteqx(usteqx~=0);usteqy(usteqy~=0)];
 Sepind = find(diff(C)==1);
@@ -93,9 +89,10 @@ else
     A3 = [nan nan];
 end
 %%
+set(0,'defaulttextInterpreter','latex') 
 figure(1)
 
-red = plot(polyshape([Seperatrix(:,1);Xspan(2);Xspan(1)],[Seperatrix(:,2);Yspan(1)-1;Yspan(1)-1]),'facecolor',[1 .7 .7],'edgealpha',0);
+red = plot(polyshape([Seperatrix(:,1);Xspan(2);Xspan(1)],[Seperatrix(:,2);Yspan(1)-1;Yspan(1)-1]),'facecolor',[1 .4 .4],'edgealpha',0);
 hold on
 green = plot(polyshape([Seperatrix(:,1);Xspan(2);Xspan(1)],[Seperatrix(:,2);Yspan(2)+1;Yspan(2)+1]),'facecolor',[.7 1 .7],'edgealpha',0);
 plot(Seperatrix(:,1),Seperatrix(:,2),'--k','linewidth',2)
@@ -110,15 +107,15 @@ sols = plot(nan,nan,'color',[.5 .5 .5]);%plot(A1(:,1),A1(:,2),'-k');
 %plot(A2(:,1),A2(:,2),'-k')
 %plot(A3(:,1),A3(:,2),'-k')
 
-quiver(X,Y,arrowscale*dx,arrowscale*dy,'linewidth',1.5, 'AutoScaleFactor',0.5)
+quiver(X,Y,dx,dy,'linewidth',1.5, 'AutoScaleFactor',0.5)
 
-psta = plot(steqx,steqy,'bo','markersize',10,'linewidth',2);
-pusta = plot(usteqx,usteqy,'ro','markersize',10,'linewidth',2);
-xlabel('Non-migratory population (n_{0})')
-ylabel('Migratory population (n_{1})')
-legend([psta pusta,sols,red,green],{'Stable population equilibrium','Saddle point (Unstable eq. on manifold)','Solutions from random initial states','Converges to zero mmigrators','Converges to non-zero migrators'},'location','nw')
+psta = plot(steqx,steqy,'o','markersize',10,'linewidth',2,'color',[0.3 0.7 1]);
+pusta = plot(usteqx,usteqy,'o','markersize',10,'linewidth',2,'color',[0.8500 0.3250 0.0980]);
+xlabel('Non-migratory population ($n_{0}$)')
+ylabel('Migratory population ($n_{1}$)')
+legend([psta pusta,sols,red,green],{'Stable population equilibrium','Saddle point (Unstable eq. on manifold)','Solutions from random initial states','Converges to zero migrants','Converges to non-zero migrants'},'location','nw')
 xlim([Xspan(1) Xspan(2)])
 ylim([Yspan(1)-1 Yspan(2)+1])
 
 set(gcf,'Position',[550 350 700 500])
-%export_fig('C:/Users/thekn/Pictures/PhasePlotPopulationDynamics','-png','-m5')
+%export_fig('C:/Users/thekn/Pictures/PhasePlotPopulationDynamics','-png','-transparent','-m5')

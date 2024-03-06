@@ -82,7 +82,7 @@ popt.mon = mon;
 popt.monind = monind;
 popt.TotPop = TotPop;
 popt.prop = prop;
-save('Pop_tau.mat','popt');
+%save('Pop_tau.mat','popt');
 %%
 figure(1)
 surf(Ay,tau,TotPop,prop,'edgecolor','none');

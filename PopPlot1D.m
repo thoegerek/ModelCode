@@ -1,21 +1,21 @@
 M = linearisedInvader(false);
 
-% ax = 0.01;
-% ay = 0.01;
+% ax = .02;
+% ay = .0175;
 % b = 1;
-% c = .1;
-% d = .1;
-% mu = .5;
+% c = 1;
+% d = 1;
+% mu = .2;
 
 ax = .02;
-ay = .0175;
+ay = .015;
 b = 1;
 c = 1;
 d = 1;
-mu = .2;
+mu = .24;
 
 nump1 = 1000;
-uppercutoff = 1/4;
+uppercutoff = 1/3;
 dtau = ((b-mu)/c)/(nump1-1) *uppercutoff;
 tau = 0:dtau:(b-mu)/c  *uppercutoff;
 
@@ -48,7 +48,7 @@ for i = 1:nump1
     TotPops(i) = sum(Xs{i}(end,:));
     xPops(i) = Xs{i}(end,1);
     yPops(i) = Xs{i}(end,2);
-    X0s = [xPops(i),yPops(i)];
+    X0s = [xPops(i),yPops(i)+1e-6];
     
     disp(['i = ' num2str(i) ' / ' num2str(nump1)])
 end
@@ -58,19 +58,22 @@ mon = tau(monind);
 pol = max(eq(st==-1));
 [~,polind] = min(abs(pol-tau));
 %%
-% popt.data = {ay,b,c,d,mu,X0};
-% popt.dataDesc = {'ay','b','c','d','mu','X0'};
-% popt.tau = tau;
-% popt.ax = Ay;
-% popt.X = X;
-% popt.pol = pol;
-% popt.polind = polind;
-% popt.mon = mon;
-% popt.monind = monind;
-% popt.TotPop = TotPop;
-% popt.prop = prop;
-% save('Pop_tau.mat','popt');
+pp1d.data = {ax,ay,b,c,d,mu,X0};
+pp1d.dataDesc = {'ax','ay','b','c','d','mu','X0'};
+pp1d.tau = tau;
+pp1d.xPopb = xPopb;
+pp1d.xPops = xPops;
+pp1d.yPopb = yPopb;
+pp1d.yPops = yPops;
+pp1d.pol = pol;
+pp1d.polind = polind;
+pp1d.mon = mon;
+pp1d.monind = monind;
+pp1d.TotPopb = TotPopb;
+pp1d.TotPops = TotPops;
+%save('Pop_Plot_1D.mat','pp1d');
 %%
+figure(1)
 close(1)
 figure(1)
 yyaxis left
@@ -90,5 +93,4 @@ plot(tau,yPopb./(xPopb+yPopb))
 plot(tau,yPops./(xPops+yPops),'--')
 ylim([0 1])
 ylabel('Migrating fraction of population')
-legend({'Total population','Chosen sociality','Ideal sociality','Collapsed migration'},'location','se')
-title(['d_{1} = ' num2str(Ayts)])
+legend({'Total population','Collapsed migration','Chosen sociality','Ideal sociality'},'location','nw')
