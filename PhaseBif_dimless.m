@@ -24,9 +24,9 @@ for i = 1:nump1
     for j = 1:nump2
         currprec = prec;
         X0 = [1-Mu(i),(1-Mu(i))/Ay(j)];
-        degree = 1;%+1.5^logAy(j); %Houristic for hitting all tau posibilities while still keeping prec down
+        degree = 1.5^logAy(j); %Houristic for hitting all tau posibilities while still keeping prec down
         tau = linspace(0,(1-Mu(i))^(1/degree),currprec).^degree;
-        k = max(length(D),B(i,max(1,j-1)));
+        k = length(D);%max(length(D),B(i,max(1,j-1)));
         while k >= 1 && B(i,j) == 0
             [eq,st] = evolutionaryEq(@myModel,X0,1,Ay(j),1,1,D(k),Mu(i),tau,tol);
             if ~isempty(eq(st==-1)>0)
@@ -36,11 +36,10 @@ for i = 1:nump1
                 k = k-1;
             end
             if B(i,j) == 0
-                break;
-%                 currprec = currprec*3;
-%                 tau = linspace(0,(1-Mu(i)),currprec);
-%                 k = max(length(D),B(i,max(1,j-1)));
-%                 disp(['Failed to find value, increasing precision to ' num2str(currprec)])
+                currprec = currprec*3;
+                tau = linspace(0,(1-Mu(i)),currprec);
+                k = max(length(D),B(i,max(1,j-1)));
+                disp(['Failed to find value, increasing precision to ' num2str(currprec)])
             else
                 disp(['ay: ' num2str(j) ' / ' num2str(nump2) ', mu: ' num2str(i) ' / ' num2str(nump1)])
             end

@@ -7,13 +7,18 @@ c = 1;
 d = 1;
 mu = .24;
 
+% nump2 = 100;
+% maxAy = .02;
+% minAy = .005;
+% Ay = linspace(minAy,maxAy,nump2);
+
 nump2 = 100;
-maxAy = .02;
-minAy = .005;
-Ay = linspace(minAy,maxAy,nump2);
+maxMu = .5;
+minMu = .05;
+Mu = linspace(minMu,maxMu,nump2);
 
 nump1 = 1000;
-uppercutoff = 1/3;
+uppercutoff = 1;
 dtau = ((b-mu)/c)/(nump1-1) *uppercutoff;
 tau = 0:dtau:(b-mu)/c  *uppercutoff;
 
@@ -30,8 +35,8 @@ Eq = zeros(nump2,1);
 St = zeros(nump2,1);
 
 for i = 1:nump2
-    X0 = [(b-mu)/ax,(b-mu)/Ay(i)];
-    [eq,st] = evolutionaryEq(@myModel,X0,ax,Ay(i),b,c,d,mu,tau,0);
+    X0 = [(b-mu)/ax,(b-mu)/ay];
+    [eq,st] = evolutionaryEq(@myModel,X0,ax,ay,b,c,d,Mu(i),tau,0);
     if length(eq) > size(Eq,2)
         Eq = [Eq,zeros(nump2,1)];
         St = [St,zeros(nump2,1)];
@@ -39,7 +44,7 @@ for i = 1:nump2
     Eq(i,1:length(eq)) = eq;
     St(i,1:length(st)) = st;
     for j = 1:nump1
-        [~,X{i,j}] = runToSS(@myModel,1,X0,1e3,1e-7,{ax,Ay(i),b,c,d,mu,tau(j)});
+        [~,X{i,j}] = runToSS(@myModel,1,X0,1e3,1e-7,{ax,ay,b,c,d,Mu(i),tau(j)});
 
         %[~,lambda] = eig(M(Ax(i),ay,b,c,d,mu,tauext(j+1),tau(j),X{i,j}(end,1),X{i,j}(end,2)));  %Finds the invasion strength just above the diagonal
         %f(j) = max(diag(lambda));
@@ -62,7 +67,8 @@ end
 
 
 prop = yPop./xPop;
-prop(isnan(prop)) = 0;
+prop(isnan(prop)) = -.1;
+prop(TotPop < 1e-4) = -.1;
 %%
 popt.data = {ay,b,c,d,mu,X0};
 popt.dataDesc = {'ay','b','c','d','mu','X0'};
@@ -78,7 +84,7 @@ popt.prop = prop;
 %save('Pop_tau.mat','popt');
 %%
 figure(1)
-surf(Ay,tau,TotPop,prop,'edgecolor','none');
+surf(Mu,tau,TotPop,prop,'edgecolor','none');
 view(45,45)
 colormap('jet')
 colorbar
@@ -86,18 +92,18 @@ hold on
 
 spacing1 = 100;  % better grid size
 for i = [1:spacing1:nump1, nump1]
-    plot3(Ay, ones(nump2,1)*tau(i), TotPop(i,:),'-k');
+    plot3(Mu, ones(nump2,1)*tau(i), TotPop(i,:),'-k');
 end
 spacing2 = 10;  % better grid size
 for i = [1:spacing2:nump2, nump2]
-    plot3(ones(nump1,1)*Ay(i), tau, TotPop(:,i),'-k');
+    plot3(ones(nump1,1)*Mu(i), tau, TotPop(:,i),'-k');
 end
 
-p1 = plot3(Ay,pol,TotPop(sub2ind([nump1 nump2],polind,1:nump2)),'r','linewidth',2);
-p2 = plot3(Ay,mon,TotPop(sub2ind([nump1 nump2],monind,1:nump2)),'m','linewidth',2);
+p1 = plot3(Mu,pol,TotPop(sub2ind([nump1 nump2],polind,1:nump2)),'r','linewidth',2);
+p2 = plot3(Mu,mon,TotPop(sub2ind([nump1 nump2],monind,1:nump2)),'m','linewidth',2);
 
-xlim([Ay(1) Ay(end)])
-xlabel('ay')
+xlim([Mu(1) Mu(end)])
+xlabel('\mu')
 ylabel('\tau')
 ylim([tau(1) tau(end)])
 zlabel('x* + y*')

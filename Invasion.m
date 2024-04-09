@@ -37,7 +37,7 @@ Xicat = Xcat(:,3:4);
 ymax = 70;
 plot([250 250],[0 ymax],'--',[750,750],[0,ymax],'--')
 hold on
-plt = plot(Tcat,Xrcat,Tcat,Xicat,'-.',Tcat,sum(Xcat,2),'linewidt',1.5);
+plt = plot(Tcat,Xrcat,Tcat,Xicat,'-.',Tcat,sum(Xcat,2),'linewidth',1.5);
 colororder([.5 .5 .5;
     .5 .5 .5;
     0.4660 0.6740 0.1880;
