@@ -1,18 +1,19 @@
-% ax = 0.01;
-% ay = 0.01;
+% ax = .02;
+% ay = .015;
 % b = 1;
-% c = .1;
-% d = .125;
-% mu = .5;
+% c = 1;
+% d = 1;
+% mu = .24;
 
-ax = .02;
-ay = .015;
+ax = .001;
+ay = .0003;
 b = 1;
-c = 1;
-d = 1;
-mu = .24;
+c = .2;
+d = .015;
+mu = .5;
 
-nump = 500;
+
+nump = 50;
 cutoff = 1/3.5;
 dtau = ((b-mu)/c)/(nump-1) * cutoff;
 tau = 0:dtau:(b-mu)/c *cutoff;

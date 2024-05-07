@@ -1,19 +1,26 @@
 M = linearisedInvader(false);
 
-ax = .02;
-ay = .015;
+% ax = .02;
+% ay = .015;
+% b = 1;
+% c = 1;
+% d = 1;
+% mu = .24;
+
+ax = .001;
+ay = .0003;
 b = 1;
-c = 1;
-d = 1;
-mu = .24;
+c = .2;
+d = .015;
+mu = .5;
 
 nump2 = 100;
-maxAy = .02;
-minAy = .005;
+maxAy = .001;
+minAy = .0002;
 Ay = linspace(minAy,maxAy,nump2);
 
 nump1 = 1000;
-uppercutoff = 1/3;
+uppercutoff = 1/2.5;
 dtau = ((b-mu)/c)/(nump1-1) *uppercutoff;
 tau = 0:dtau:(b-mu)/c  *uppercutoff;
 
@@ -75,7 +82,7 @@ popt.mon = mon;
 popt.monind = monind;
 popt.TotPop = TotPop;
 popt.prop = prop;
-%save('Pop_tau.mat','popt');
+save('Pop_tau.mat','popt');
 %%
 figure(1)
 surf(Ay,tau,TotPop,prop,'edgecolor','none');
@@ -104,16 +111,15 @@ zlabel('x* + y*')
 
 legend([p1,p2],{'Chosen strategy','Ideal strategy'},'location','ne')
 %%
-Ayts = 0.015;
-[~,Aytsind] = find(Ay == Ayts);
+[~,Ayind] = min(abs(Ay - ay));
 figure(2)
-plot(tau,TotPop(:,Aytsind),'linewidth',1.5)
+plot(tau,TotPop(:,Ayind),'linewidth',1.5)
 hold on
-plot(pol(Aytsind),TotPop(polind(Aytsind),Aytsind),'r.','markersize',10)
-plot(mon(Aytsind),TotPop(monind(Aytsind),Aytsind),'m.','markersize',10)
+plot(pol(Ayind),TotPop(polind(Ayind),Ayind),'r.','markersize',10)
+plot(mon(Ayind),TotPop(monind(Ayind),Ayind),'m.','markersize',10)
 legend({'Total population','Chosen sociality','Ideal sociality'},'location','se')
 title(['d_{1} = ' num2str(Ayts)])
 ylabel('Population (n_{0} + n_{1})')
 xlabel('Sociality (\sigma)')
 xlim([0 max(tau)])
-ylim([0 max(TotPop(:,Aytsind))*1.2])
+ylim([0 max(TotPop(:,Ayind))*1.2])

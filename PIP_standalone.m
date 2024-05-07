@@ -1,56 +1,58 @@
 M = linearisedInvader(false);
-ax = .02;
-ay = .015;
-b = 1;
-c = 1;
-d = 1;
-mu = .24;
-
-
-% ax = .01;
-% ay = .01;
+% ax = .02;
+% ay = .015;
 % b = 1;
-% c = .125;
-% d = .125;
-% mu = .5;
+% c = 1;
+% d = 1;
+% mu = .24;
 
-X0 = [[(b-mu)/ax,(b-mu)/ay];
-    [(b-mu)/ax,0]];
+ax = .001;
+ay = .0003;
+b = 1;
+c = .2;
+%d = .015;
+D(80);
+mu = .5;
+
 %%
 nump = 5000;
-f = zeros(nump,2);
-flow = zeros(nump);
-uppercutoff = 1/3.5;
+f = zeros(nump,nump,2);
+uppercutoff = 1/2.5;
 dtau = ((b-mu)/c)/(nump-1) * uppercutoff;
 tau = 0:dtau:(b-mu)/c *uppercutoff;
-
-X = cell(nump,2);
 %%
+X = zeros(nump,2);
+Y = zeros(nump,2);
 for r = 1:nump
-    [~,~,stability] = equilibriumsStability(ax,ay,b,c,d,mu,tau(r),true); %This is very slow - try to do this from (x0,0) instead of globally?
-    O = sum(stability == -1);
-    for o = 1:O
-        [~,X{r,o}] = runToSS(@myModel,1,X0(o,:),1e2,1e-10,{ax,ay,b,c,d,mu,tau(r)});
+    [eqx,eqy,stability] = equilibriumsStability(ax,ay,b,c,d,mu,tau(r),true); %This is very slow - try to do this from (x0,0) instead of globally?
+    nStab = sum(stability == -1);
+    X(r,1:nStab) = eqx(stability == -1);
+    Y(r,1:nStab) = eqy(stability == -1);
+
+    [Y(r,1:nStab),ord] = sort(Y(r,1:nStab));
+    X(r,1:nStab) = X(r,ord);
+    
+    for j = 1:2
         for i = 1:nump
-            [~,lambda] = eig(M(ax,ay,b,c,d,mu,tau(i),tau(r),X{r,o}(end,1),X{r,o}(end,2)));
-            f(i,r,o) = max(diag(lambda));
+            [~,lambda] = eig(M(ax,ay,b,c,d,mu,tau(i),tau(r),X(r,j),Y(r,j)));
+            f(i,r,j) = max(diag(lambda));
         end
-        disp([num2str(r) ' / ' num2str(nump)])
+        if nStab == 1
+            f(:,r,2) = f(:,r,1);
+            break;
+        end
     end
-    if O == 1
-        X{r,2} = X{r,1};
-        f(:,r,2) = f(:,r,1);
-    else
-    end
+
+    disp([num2str(r) ' / ' num2str(nump)])
 end
 %%
 eqs = [];
 stability = [];
-for o = 1:size(X,2)
+for j = 1:size(X,2)
     dfd = zeros(nump-1,1);
     for i = 2:nump-1
-        [~,lu] = eig(M(ax,ay,b,c,d,mu,tau(i+1),tau(i),X{i,o}(end,1),X{i,o}(end,2)));
-        [~,ld] = eig(M(ax,ay,b,c,d,mu,tau(i-1),tau(i),X{i,o}(end,1),X{i,o}(end,2)));
+        [~,lu] = eig(M(ax,ay,b,c,d,mu,tau(i+1),tau(i),X(i,j),Y(i,j)));
+        [~,ld] = eig(M(ax,ay,b,c,d,mu,tau(i-1),tau(i),X(i,j),Y(i,j)));
         dfd(i) = max(diag(ld))-max(diag(lu));
     end
     dfd(1) = [];
@@ -61,18 +63,18 @@ for o = 1:size(X,2)
     eqs = [eqs tau(eqidx + 1)];
     ddfd = diff(dfd);
     stab = ddfd(eqidx);
-    stability = [stability stab + 1 - 2*(stab>0)];
+    stability = [stability;stab + 1 - 2*(stab>0)];
 end
 
 %%
+pip = struct;
  pip.data = {ax,ay,b,c,d,mu,X0};
  pip.dataDesc = {'ax','ay','b','c','d','mu','X0'};
  pip.tau = tau;
- pip.X = X;
  pip.f = f;
  pip.eqs = eqs;
  pip.stability = stability;
- %save('PIP.mat','pip');
+ save('PIP.mat','pip');
 
 % pip4.data = {ax,ay,b,c,d,mu,X0};
 % pip4.dataDesc = {'ax','ay','b','c','d','mu','X0'};

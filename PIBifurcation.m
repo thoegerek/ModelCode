@@ -1,25 +1,38 @@
 nump = 100;%25;
-minD = 0.5;
-maxD = 5;
+minD = 0.005;
+maxD = 10;
 degree = 3;
 D = linspace(minD,maxD^(1/degree),nump).^degree;
 
-ax = .02;
-ay = .015;
-%Mu = .1:.01:.6;
-%nump = length(Mu);
-b = 1;
-c = 1;
-d = 1;
-mu = .24;
+% nump = 100;%25;
+% minAy = 0.005;
+% maxAy = 0.02;
+% degree = 3;
+% Ay = linspace(minAy,maxAy,nump);
 
-X0 = [100*(b-mu)/ax,100*(b-mu)/ay];
+% ax = .02;
+% ay = .015;
+% %Mu = .1:.01:.6;
+% %nump = length(Mu);
+% b = 1;
+% c = 1;
+% d = 1;
+% mu = .24;
+
+ax = .001;
+ay = .0003;
+b = 1;
+c = .2;
+d = .015;
+mu = .5;
+
+X0 = [100*(b-mu)/ax,100*(b-mu)];
 
 uppercutoff = 1;
-prec1 = 50;
-prec2 = 50;%150;
+prec1 = 150;
+prec2 = 150;
 
-tol = 0;%(1e-12)/(prec1+prec2)^2;
+tol = (1e-12)/(prec1+prec2)^2;
 %% 1st grid
 Eq = inf*ones(nump,1);
 St = zeros(nump,1);
@@ -27,7 +40,7 @@ St = zeros(nump,1);
 dtau = ((b-mu)/c)/(prec1-1) * uppercutoff;
 tau = 0:dtau:(b-mu)/c *uppercutoff;
 
-for i = 1:nump
+for i = 70:nump
     [eq,st] = evolutionaryEq(@myModel,X0,ax,ay,b,c,D(i),mu,tau,tol);
     if length(eq) > size(Eq,2)
         Eq = [Eq,inf*ones(nump,1)];
@@ -100,29 +113,36 @@ pib.eq = CEq;
 pib.stability = CSt;
 pib.data = {ax,ay,b,c,mu,X0};
 pib.dataDesc = {'ax','ay','b','c','mu','X0'};
-pib.d = D;
-%save('PiB_d.mat','pib');
-
+pib.d = Ay;
+save('PiB_d.mat','pib');
 %%
-figure(2)
+% pib.eq = CEq;
+% pib.stability = CSt;
+% pib.data = {ax,b,c,d,mu,X0};
+% pib.dataDesc = {'ax','b','c','d','mu','X0'};
+% pib.ay = Ay;
+% save('PiB_ay.mat','pib');
+%%
+figure(1)
 axis;
 hold on
 for i = 1:size(CEq,2)
-    plot(D(CSt(:,i)==1),CEq(CSt(:,i)==1,i),'m.')
-    plot(D(CSt(:,i)==-1),CEq(CSt(:,i)==-1,i),'k.')
+    plot(Ay(CSt(:,i)==1),CEq(CSt(:,i)==1,i),'m.')
+    plot(Ay(CSt(:,i)==-1),CEq(CSt(:,i)==-1,i),'k.')
 end
 %%
-%load('PiB_d.mat')
+load('PiB_d.mat')
+%load('PiB_ay.mat')
 %%
-Dtau = .0001;
+Dtau = .001;
 Tau = min(pib.eq,[],'all'):Dtau:max(pib.eq(~isinf(pib.eq)),[],'all')*10;
 Bi = zeros(length(Tau),length(pib.d));
-for i = 1:length(Mu)
+for i = 1:length(Ay)
     if sum(pib.stability(i,:)==-1)>0
         onechance = false;
         taustart = find(Tau-min(pib.eq(i,:)) > 1/(prec1*prec2),1);
         for j = taustart:length(Tau)
-            [~,~,st] = equilibriumsStability(pib.data{1},pib.data{2},pib.data{3},pib.data{4},d,Mu(i),Tau(j),true);
+            [~,~,st] = equilibriumsStability(ax,ay,b,c,D(i),mu,Tau(j),true);
             if sum(st==-1) > 1
                 Bi(j,i) = 1;
             else
@@ -151,9 +171,9 @@ figure(2)
 axis;
 hold on
 for i = 1:size(pib.eq,2)
-    plot(Mu(pib.stability(:,i)==1),pib.eq(pib.stability(:,i)==1,i),'m.')
-    plot(Mu(pib.stability(:,i)==-1),pib.eq(pib.stability(:,i)==-1,i),'k.')
+    plot(Ay(pib.stability(:,i)==1),pib.eq(pib.stability(:,i)==1,i),'m.')
+    plot(Ay(pib.stability(:,i)==-1),pib.eq(pib.stability(:,i)==-1,i),'k.')
 end
 for i = 1:length(pol)
-    patch(Mu(pol{i}(:,2)),Tau(pol{i}(:,1)),'.r','facealpha',.2)
+    patch(Ay(pol{i}(:,2)),Tau(pol{i}(:,1)),'.r','facealpha',.2)
 end

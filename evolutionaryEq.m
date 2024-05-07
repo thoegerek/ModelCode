@@ -35,7 +35,8 @@ end
 dfd(1) = [];
 fisx = dfd(1:end-1).*dfd(2:end);
 eqidx = find(fisx<-tol);
-eqs = tau(eqidx + 1); %set equilibria to where dfd changes sign (more significantly that "tol")
+eqs = tau(eqidx + 1); %set equilibria to where dfd changes sign (more significantly than "tol")
+
 ddfd = diff(dfd);
 stability = ddfd(eqidx);
 stability = 1 - 2*(stability>0); %stability found from sign change direction

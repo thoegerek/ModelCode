@@ -10,7 +10,7 @@ load('Pop_Plot_1D.mat')
 load('Pop_tau.mat')
 % load('AXAY.mat')
 % load('PiB_dimless.mat')
-% load('Pha.mat');
+load('Pha.mat');
 % load('Hys.mat');
 %% Color definitions
 set(0,'defaulttextInterpreter','latex') 
@@ -64,7 +64,7 @@ set(gcf,'Position',[550 350 700 500])
 
 
 %% Pairwise invasability plot
-figure(1+1)
+figure(2)
 imshow(((pip.f(:,:,1)<0)*2+(pip.f(:,:,2)<0))/3,'xdata',pip.tau,'ydata',pip.tau)
 set(gca,'visible','on','ydir','normal')
 xlabel('Sociality of prevailing population ($\sigma_{n}$)','fontsize',12)
@@ -94,7 +94,7 @@ set(0,'defaulttextInterpreter','latex')
 
 
 %% Bifurcation in population eq.
-figure(1+2)
+figure(3)
 
 
 %stax1b
@@ -266,8 +266,19 @@ ax2 = axes('Position',[.6 .6 .3 .3]);
     rectangle('Position', [xzoom(1), yzoom(1), xzoom(2)-xzoom(1),  yzoom(2)-yzoom(1)]);
     xlim(xzoom)
     ylim(yzoom)
-%% Pip of 4 scenarios
-% fig = figure(1+4);
+%% Phase plot of critical values in strat
+figure(5)
+contourf(1./pha.B,log(pha.D),log(Ay(pha.ind)))
+ylabel('Learning rate coefficient nat. log. (ln(c))')
+xlabel('Natural mortality rate ($\mu$)')
+set(gca,'ydir','normal')
+cb = colorbar;
+yl = ylabel(cb,'Maximum sustained migration value of CNDD in distant habitat (d_{1})','FontSize',12,'Rotation',270);
+yl.Position(1) = yl.Position(1) + 1.5;
+    
+set(gcf,'Position',[550 350 700 500])
+    %% Pip of 4 scenarios
+% fig = figure(6);
 % pip123 = {pip1,pip2;pip3,pip4};
 % for i = 1:2
 %     for j = 1:2
@@ -294,7 +305,7 @@ ax2 = axes('Position',[.6 .6 .3 .3]);
 % lg = legend([dummy2,dummy1],{'Positive invasion fitness','Negative invasion fitness'});
 % lg.Position = [.5 .5 0 0];
 %% Population for varied tau (1D)
-figure(1+5)
+figure(7)
 colororder([C.totpop;C.fraction])
 yyaxis left
 plot(pp1d.tau,pp1d.TotPopb,'linewidth',1.5)
@@ -317,7 +328,7 @@ set(gcf,'Position',[550 350 700 500])
 nump1 = length(popt.tau);
 nump2 = length(popt.ax);
 tol = 1e-5;
-figure(1+6)
+figure(8)
 surf(popt.ax,popt.tau,popt.TotPop,popt.prop,'edgecolor','none');
 collapse = popt.TotPop; collapse(popt.prop>tol) = nan;
 hold on
@@ -374,7 +385,7 @@ legend([p1,p2],{'Chosen strategy','Ideal strategy'},'location','ne')
 %% pop varying ax and ay
 nump1 = length(axay.ax);
 nump2 = length(axay.ay);
-figure(1+7)
+figure(9)
 surf(axay.ax,axay.ay,log(axay.TotPop),log(axay.prop+1),'edgecolor','none');
 view(135,45)
 colormap('jet')
@@ -399,7 +410,7 @@ zlabel('ln(n_{0}* + n_{1}* +1)')
 
 
 %% bifurcation of strat -dimless
-figure(1+8)
+figure(10)
 axis;
 hold on
 for i = 1:size(pidi.stability,2)
@@ -411,19 +422,9 @@ xlabel('c \cdot b^{3} \cdot \lambda^{-2} \cdot d_{0}^{-1}');
 ylabel('\sigma [b/\lambda]')
 
 
-%% Phase plot of critical values in strat
-figure(1+9)
-logbif = log(pha.bif);
-logbif(logbif==-inf) = max(logbif,[],'all')+1;
-imagesc(logbif,'xdata',log(pha.Ay),'ydata',pha.Mu)
-xlabel('ln(d_{1})')
-ylabel('\mu')
-set(gca,'ydir','normal')
-cb = colorbar;
-yl = ylabel(cb,'lower bound for critical value of c \cdot b^{3} \cdot \lambda^{-2} \cdot d_{0}^{-1}','FontSize',12,'Rotation',270);
-yl.Position(1) = yl.Position(1) + 1.5;
+
 %% Hysteresis example
-figure(1+10)
+figure(11)
 yyaxis left
 plot(1:length(hys.D),hys.D,'k',1:length(hys.D),hys.tau,'--b')
 yyaxis right
@@ -433,7 +434,7 @@ ylabel('Individuals \cdot 10^{3}')
 legend('c','\sigma*','n_{0}','n_{1}')
 
 %% One invasion
-figure(1+11)
+figure(12)
 plot(inv.T,inv.X(:,1),inv.T,inv.X(:,2),inv.T,inv.X(:,3),':',inv.T,inv.X(:,4),':','linewidth',1.5);
 set(gca,'colororder',[[0 0.4470 0.7410];[0.8500 0.3250 0.0980];[0 0.4470 0.7410];[0.8500 0.3250 0.0980]])
 hold on
@@ -449,12 +450,12 @@ names = {'PopDyn';
     'PIP';
     'Bifurcation_pop';
     'Bifurcation_strat';
+    'CriticalVals';
     'PIP123';
     'tauVaried';
     'd1Varied';
     'd0d1Varied';
     'Bif_strat_dimless';
-    'CriticalVals';
     'Hysteresis';
     'Invasion'};
 
