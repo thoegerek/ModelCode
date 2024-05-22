@@ -1,8 +1,8 @@
-nump = 100;%25;
-minD = 0.005;
-maxD = 10;
+nump = 250;
+minD = .005;
+maxD = .1;
 degree = 3;
-D = linspace(minD,maxD^(1/degree),nump).^degree;
+D = (linspace(0,(maxD-minD)^(1/degree),nump).^degree) + minD;
 
 % nump = 100;%25;
 % minAy = 0.005;
@@ -40,7 +40,7 @@ St = zeros(nump,1);
 dtau = ((b-mu)/c)/(prec1-1) * uppercutoff;
 tau = 0:dtau:(b-mu)/c *uppercutoff;
 
-for i = 70:nump
+for i = 1:nump
     [eq,st] = evolutionaryEq(@myModel,X0,ax,ay,b,c,D(i),mu,tau,tol);
     if length(eq) > size(Eq,2)
         Eq = [Eq,inf*ones(nump,1)];
@@ -113,8 +113,8 @@ pib.eq = CEq;
 pib.stability = CSt;
 pib.data = {ax,ay,b,c,mu,X0};
 pib.dataDesc = {'ax','ay','b','c','mu','X0'};
-pib.d = Ay;
-save('PiB_d.mat','pib');
+pib.d = D;
+%save('PiB_d.mat','pib');
 %%
 % pib.eq = CEq;
 % pib.stability = CSt;
@@ -127,8 +127,8 @@ figure(1)
 axis;
 hold on
 for i = 1:size(CEq,2)
-    plot(Ay(CSt(:,i)==1),CEq(CSt(:,i)==1,i),'m.')
-    plot(Ay(CSt(:,i)==-1),CEq(CSt(:,i)==-1,i),'k.')
+    plot(D(CSt(:,i)==1),CEq(CSt(:,i)==1,i),'m.')
+    plot(D(CSt(:,i)==-1),CEq(CSt(:,i)==-1,i),'k.')
 end
 %%
 load('PiB_d.mat')
@@ -137,7 +137,7 @@ load('PiB_d.mat')
 Dtau = .001;
 Tau = min(pib.eq,[],'all'):Dtau:max(pib.eq(~isinf(pib.eq)),[],'all')*10;
 Bi = zeros(length(Tau),length(pib.d));
-for i = 1:length(Ay)
+for i = 1:length(D)
     if sum(pib.stability(i,:)==-1)>0
         onechance = false;
         taustart = find(Tau-min(pib.eq(i,:)) > 1/(prec1*prec2),1);
@@ -171,9 +171,9 @@ figure(2)
 axis;
 hold on
 for i = 1:size(pib.eq,2)
-    plot(Ay(pib.stability(:,i)==1),pib.eq(pib.stability(:,i)==1,i),'m.')
-    plot(Ay(pib.stability(:,i)==-1),pib.eq(pib.stability(:,i)==-1,i),'k.')
+    plot(D(pib.stability(:,i)==1),pib.eq(pib.stability(:,i)==1,i),'m.')
+    plot(D(pib.stability(:,i)==-1),pib.eq(pib.stability(:,i)==-1,i),'k.')
 end
 for i = 1:length(pol)
-    patch(Ay(pol{i}(:,2)),Tau(pol{i}(:,1)),'.r','facealpha',.2)
+    patch(D(pol{i}(:,2)),Tau(pol{i}(:,1)),'.r','facealpha',.2)
 end

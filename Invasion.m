@@ -1,52 +1,114 @@
-ax = .02;
-ay = .015;
+% ax = .02;
+% ay = .015;
+% b = 1;
+% c = 1;
+% d = 1;
+% mu = .24;
+
+% taur = .2;
+% taui = .1;
+
+ax = .001;
+ay = .0003;
 b = 1;
-c = 1;
-d = 1;
-mu = .24;
+c = .2;
+d = .015;
+mu = .5;
+mubad = .570;
 
-taur = .2;
-taui = .1;
-
+tau1 = 1;
+tau2 = .8;
+tau3 = .6;
+tau4 = .4;
 %%
-X01 = [1;1;0;0];
-[T1,X1] = ode15s(@myModelInvader,[0 250],X01,[],ax,ay,b,c,d,mu,taur,0);
+X00 = [0;0;1;1];
+[T0,X0] = ode15s(@myModelInvader,[0 150],X00,[],ax,ay,b,c,d,mu,0,tau1);
 
-X02 = X1(end,:)' + [0;0;1;0];
-[T2,X2] = ode15s(@myModelInvader,[0 500],X02,[],ax,ay,b,c,d,mu,taur,taui);
+X01 = [0;0;X0(end,3:4)'];
+[T1,X1] = ode15s(@myModelInvader,[0 50],X01,[],ax,ay,b,c,d,mu,0,tau1);
 
-X03 = [X2(end,1); X2(end,2); X2(end,3); X2(end,4) - 15];
-[T3,X3] = ode15s(@myModelInvader,[0 500],X03,[],ax,ay,b,c,d,mu,taur,taui);
+X02 = [X1(end,1)+X1(end,3);X1(end,2)+X1(end,4);1;0];
+[T2,X2] = ode15s(@myModelInvader,[0 600],X02,[],ax,ay,b,c,d,mu,tau1,tau2);
+T2 = T2+T1(end);
+
+X03 = [X2(end,1)+X2(end,3);X2(end,2)+X2(end,4);1;0];
+[T3,X3] = ode15s(@myModelInvader,[0 600],X03,[],ax,ay,b,c,d,mu,tau2,tau3);
+T3 = T3+T2(end);
+
+X04 = [X3(end,1)+X3(end,3);X3(end,2)+X3(end,4);1;0];
+[T4,X4] = ode15s(@myModelInvader,[0 1200],X04,[],ax,ay,b,c,d,mu,tau3,tau4);
+T4 = T4+T3(end);
+
+
+X05 = [X4(end,1)+X4(end,3);X4(end,2)+X4(end,4); 0 ; 0];
+[T5,X5] = ode15s(@myModelInvader,[0 100],X05,[],ax,ay,b,c,d,mubad,tau4,0);
+T5 = T5+T4(end);
+
+X06 = [X5(end,1)+X5(end,3);X5(end,2)+X5(end,4); 0 ; 0];
+[T6,X6] = ode15s(@myModelInvader,[0 150],X06,[],ax,ay,b,c,d,mu,tau4,0);
+T6 = T6+T5(end);
+
+Tcat = [T1;T2;T3;T4;T5;T6];
+Xcat = [X1;X2;X3;X4;X5;X6];
 %%
-inv.data = {ax,ay,b,c,d,mu,taur,taui,X01,X02,X03};
-inv.dataDesc = {'ax','ay','b','c','d','mu','taur','taui','X0','X02','X03'};
+inv.data = {ax,ay,b,c,d,mu,mubad};
+inv.dataDesc = {'ax','ay','b','c','d','mu','mubad'};
+inv.taus = [tau1,tau2,tau3,tau4];
 inv.T1 = T1;
 inv.T2 = T2;
 inv.T3 = T3;
+inv.T4 = T4;
+inv.T5 = T5;
+inv.T6 = T6;
 inv.X1 = X1;
 inv.X2 = X2;
 inv.X3 = X3;
+inv.X4 = X4;
+inv.X5 = X5;
+inv.X6 = X6;
 %save('Invasion.mat','inv');
-
 %%
 figure(1)
-Tcat = [T1;T1(end)+T2;T1(end)+T2(end)+T3];
-Xcat = [X1;X2;X3];
-Xrcat = Xcat(:,1:2);
-Xicat = Xcat(:,3:4);
-ymax = 70;
-plot([250 250],[0 ymax],'--',[750,750],[0,ymax],'--')
-hold on
-plt = plot(Tcat,Xrcat,Tcat,Xicat,'-.',Tcat,sum(Xcat,2),'linewidth',1.5);
-colororder([.5 .5 .5;
-    .5 .5 .5;
+ymax = 2000;
+plt = plot(T1,X1,T2,X2,T3,X3,T4,X4,T5,X5,T6,X6,Tcat,sum(Xcat,2),'linewidth',1.5);
+colororder([...
+    0.4660 0.6740 0.1880;
+    0.9290 0.6940 0.1250;
+    0.4660 0.6740 0.1880;
+    0.9290 0.6940 0.1250;
+    0.4660 0.6740 0.1880;
+    0.9290 0.6940 0.1250;
+    0.4660 0.6740 0.1880;
+    0.9290 0.6940 0.1250;
+    0.4660 0.6740 0.1880;
+    0.9290 0.6940 0.1250;
+    0.4660 0.6740 0.1880;
+    0.9290 0.6940 0.1250;
+    0.4660 0.6740 0.1880;
+    0.9290 0.6940 0.1250;
+    0.4660 0.6740 0.1880;
+    0.9290 0.6940 0.1250;
+    0.4660 0.6740 0.1880;
+    0.9290 0.6940 0.1250;
+    0.4660 0.6740 0.1880;
+    0.9290 0.6940 0.1250;
     0.4660 0.6740 0.1880;
     0.9290 0.6940 0.1250;
     0.4660 0.6740 0.1880;
     0.9290 0.6940 0.1250;
     0 0.4470 0.7410]);
-xlim([0,1000])
+styles = {'-','-','-','-','-','-',...
+'--','--','--','--',...
+'-.','-.','-.','-.',...
+':',':',...
+':',':',':',':',':',':',':',':','-'};
+lines = findobj(gca,'Type','line');
+for i = 1:length(lines)
+    lines(i).LineStyle = styles(length(styles)-i+1);
+end
+
+xlim([0,Tcat(end)])
 ylim([.5 ymax])
-legend([plt(1),plt(2),plt(5)],{'Non-migrating population','Migrating population','Total population'},'position', [.35 .75 0 0] )
+legend([plt(1),plt(2),plt(end)],{'Non-migrating population','Migrating population','Total population'},'location','ne')
 xlabel('Time (years)')
 ylabel('Adult population number (1000s)')

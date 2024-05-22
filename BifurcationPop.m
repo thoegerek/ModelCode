@@ -13,8 +13,8 @@ d = .015;
 mu = .5;
 
 
-nump = 50;
-cutoff = 1/3.5;
+nump = 5000;
+cutoff = 1/2.5;
 dtau = ((b-mu)/c)/(nump-1) * cutoff;
 tau = 0:dtau:(b-mu)/c *cutoff;
 %%

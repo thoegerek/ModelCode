@@ -71,7 +71,7 @@ pp1d.mon = mon;
 pp1d.monind = monind;
 pp1d.TotPopb = TotPopb;
 pp1d.TotPops = TotPops;
-%save('Pop_Plot_1D.mat','pp1d');
+save('Pop_Plot_1D.mat','pp1d');
 %%
 figure(1)
 close(1)

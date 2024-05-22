@@ -4,7 +4,7 @@ b = 1;
 c = .2;
 d = .015;
 mu = .5;
-tau = .33;
+tau = .35; 
 %%
 
 [eqx,eqy,st] =equilibriumsStability(ax,ay,b,c,d,mu,tau,true);
@@ -13,8 +13,8 @@ steqy = eqy(st==-1);
 usteqx = eqx(st~=-1);
 usteqy = eqy(st~=-1);
 
-Xspan = [0 2*max(steqx)];
-Yspan = [0 2*max(steqy)];
+Xspan = [0 3*max(steqx)];
+Yspan = [0 3*max(steqy)];
 
 %% Arrows
 X = linspace(Xspan(1),Xspan(2),10);
@@ -37,7 +37,7 @@ end
 %% Solutions to define basins of attraction
 Trange = (0:.01:20).^2;
 
-num1 = 250;
+num1 = 1500;
 
 X0 = [Xspan(1)*ones(1,num1),Xspan(2)*ones(1,num1)];
 Y0 = repmat(linspace(Yspan(1),Yspan(2)+1,num1),1,2);
@@ -53,7 +53,7 @@ for i = 1:num1*2
     disp([num2str(i) ' / ' num2str(2*num1) ' (1)'])
 end
 %% Transparrent lines
-num2 = 25;
+num2 = 75;
 rng(1)
 X0r = rand(num2)*Xspan(2);
 Y0r = rand(num2)*Yspan(2);
@@ -92,6 +92,23 @@ else
     A3 = [nan nan];
 end
 %%
+php = struct;
+php.data = {ax,ay,b,c,d,mu,tau};
+php.dataDesc = {'ax','ay','b','c','d','mu','tau'};
+php.X = X;
+php.Y = Y;
+php.steqx = steqx;
+php.steqy = steqy;
+php.usteqx = usteqx;
+php.usteqy = usteqy;
+php.Xspan = Xspan;
+php.Yspan = Yspan;
+php.Seperatrix = Seperatrix;
+php.XT = XT;
+php.dx = dx;
+php.dy = dy;
+%save('PhasePop.mat','php');
+%%
 figure(1)
 
 red = plot(polyshape([Seperatrix(:,1);Xspan(2);Xspan(1)],[Seperatrix(:,2);Yspan(1)-1;Yspan(1)-1]),'facecolor',[1 .7 .7],'edgealpha',0);
@@ -120,4 +137,3 @@ xlim([Xspan(1) Xspan(2)])
 ylim([Yspan(1)-.1 Yspan(2)+.1])
 
 set(gcf,'Position',[550 350 700 500])
-%export_fig('C:/Users/thekn/Pictures/PhasePlotPopulationDynamics','-png','-m5')
