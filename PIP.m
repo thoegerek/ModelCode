@@ -12,11 +12,11 @@ b = 1;
 c = .2;
 d = .015;
 mu = .5;
+%%
+nump = 5;
 
 cutoff = 1/((b-mu)/c);
 tau = linspace(0,cutoff*(b-mu)/c,nump);
-%%
-nump = 50;
 [f,eqs,stability] = pipf(ax,ay,b,c,d,mu,nump,cutoff);
 %%
 pip = struct;
@@ -45,11 +45,11 @@ b = 1;
 c = .2;
 d = .025;
 mu = .5;
+%%
+nump = 5000;
 
 cutoff = 1/((b-mu)/c);
 tau = linspace(0,cutoff*(b-mu)/c,nump);
-%%
-nump = 2500;
 [f,eqs,stability] = pipf(ax,ay,b,c,d,mu,nump,cutoff);
 %%
 pip2 = struct;
@@ -80,10 +80,11 @@ c = .05;
 d = .025;
 mu = .5;
 
+%%
+nump = 5000;
+
 cutoff = 1/((b-mu)/c);
 tau = linspace(0,cutoff*(b-mu)/c,nump);
-%%
-nump = 2500;
 [f,eqs,stability] = pipf(ax,ay,b,c,d,mu,nump,cutoff);
 %%
 pip3 = struct;
@@ -113,10 +114,11 @@ c = .2;
 d = .015;
 mu = .5;
 
+%%
+nump = 5000;
+
 cutoff = 1/((b-mu)/c);
 tau = linspace(0,cutoff*(b-mu)/c,nump);
-%%
-nump = 2500;
 [f,eqs,stability] = pipf(ax,ay,b,c,d,mu,nump,cutoff);
 %%
 pip4 = struct;

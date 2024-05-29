@@ -14,7 +14,7 @@ c = .2;
 d = .015;
 mu = .5;
 
-nump2 = 100;
+nump2 = 1000;
 maxAy = .001;
 minAy = .0002;
 Ay = linspace(minAy,maxAy,nump2);
@@ -68,14 +68,14 @@ for i = 1:nump2
 end
 
 
-prop = yPop./xPop;
+prop = abs(yPop)./(xPop+yPop);
 prop(isnan(prop)) = 0;
 %%
+popt = struct;
 popt.data = {ay,b,c,d,mu,X0};
 popt.dataDesc = {'ay','b','c','d','mu','X0'};
 popt.tau = tau;
-popt.ax = Ay;
-popt.X = X;
+popt.ay = Ay;
 popt.pol = pol;
 popt.polind = polind;
 popt.mon = mon;
@@ -118,7 +118,7 @@ hold on
 plot(pol(Ayind),TotPop(polind(Ayind),Ayind),'r.','markersize',10)
 plot(mon(Ayind),TotPop(monind(Ayind),Ayind),'m.','markersize',10)
 legend({'Total population','Chosen sociality','Ideal sociality'},'location','se')
-title(['d_{1} = ' num2str(Ayts)])
+title(['d_{1} = ' num2str(ay)])
 ylabel('Population (n_{0} + n_{1})')
 xlabel('Sociality (\sigma)')
 xlim([0 max(tau)])

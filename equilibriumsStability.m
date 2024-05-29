@@ -44,3 +44,7 @@ for i = 1:length(eqsx)
         end
     end
 end
+if ONLY_INTERIOR && length(eqx) ~= 6 %For algebraic multiplicity
+   eqx = zeros(6,1);
+   eqy = zeros(6,1);
+end

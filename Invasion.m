@@ -25,7 +25,7 @@ X00 = [0;0;1;1];
 [T0,X0] = ode15s(@myModelInvader,[0 150],X00,[],ax,ay,b,c,d,mu,0,tau1);
 
 X01 = [0;0;X0(end,3:4)'];
-[T1,X1] = ode15s(@myModelInvader,[0 50],X01,[],ax,ay,b,c,d,mu,0,tau1);
+[T1,X1] = ode15s(@myModelInvader,[0 150],X01,[],ax,ay,b,c,d,mu,0,tau1);
 
 X02 = [X1(end,1)+X1(end,3);X1(end,2)+X1(end,4);1;0];
 [T2,X2] = ode15s(@myModelInvader,[0 600],X02,[],ax,ay,b,c,d,mu,tau1,tau2);
