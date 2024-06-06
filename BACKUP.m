@@ -1,6 +1,5 @@
 %%
-close all
-%%
+
 load('Invasion.mat')
 load('PIP.mat')
 load('PIP2.mat')
@@ -26,12 +25,13 @@ load('Pop_tau.mat')
 C = struct;
 C.stable = [0.3 0.7 1];
 C.unstable = [0.8500 0.3250 0.0980];
-C.opt = [0.8500 0.3250 0.0980];%[.8 .2 .2];%[0.85 0.2 0.85];
+C.opt = [0.85 0.2 0.85];
 C.totpop = [0 0 0];
-C.nonmig = [0.6235    0.4000    0.7176];
+C.nonmig = [0.65 0.45 0];
 C.mig = [0.25 0.65 0.1];
 C.fraction = [0 0.4470 0.7410];
 C.bireg = [.8 .2 .2];
+C.quiver = [.8 .7 .2];
 
 names = cell(13,1);
 %%
@@ -297,14 +297,14 @@ manif = plot(nan,nan,'k','linewidth',1.5);
 %plot(A3(:,1),A3(:,2),'-k')
 
 norms = sqrt(php.dx.^2+php.dy.^2);
-quiver(php.X,php.Y,php.dx./sqrt(norms),php.dy./sqrt(norms),'linewidth',1, 'AutoScaleFactor',1,'color',[.6 .6 .6])
+quiver(php.X,php.Y,php.dx./sqrt(norms),php.dy./sqrt(norms),'linewidth',1.5, 'AutoScaleFactor',1,'color',C.quiver)
 
 psta = plot(php.steqx,php.steqy,'o','color',C.stable,'markersize',10,'linewidth',2);
 pusta = plot(php.usteqx(1),php.usteqy(1),'o','color',C.unstable,'markersize',10,'linewidth',2);
-psad = plot(php.usteqx(2),php.usteqy(2),'o','color',[.4 .4 .4],'markersize',10,'linewidth',2);
+psad = plot(php.usteqx(2),php.usteqy(2),'o','color',C.opt,'markersize',10,'linewidth',2);
 xlabel('Non-migrant population ($n_{0}$)')
 ylabel('Migrant population ($n_{1}$)')
-legend([psta,psad,pusta,sols,manif,green,red],{'Stable eq.','Saddle point','Unstable eq.','Random trajectories','Attracting manifold'...
+legend([psta,psad,pusta,sols,manif,red,green],{'Stable eq.','Saddle point','Unstable eq.','Random trajectories','Attracting manifold'...
     'Basin of upper eq.','Basin of lower eq.'},'location','ne')
 xlim([php.Xspan(1) php.Xspan(2)])
 ylim([php.Yspan(1)-.1 php.Yspan(2)+.1])
@@ -382,7 +382,7 @@ ylabel('Sociality ($\sigma$)')
 %quiver(QX,QY,zeros(length(qy),length(qx)),both,'linewidth',1.5, 'AutoScaleFactor',.25,'color',C.quiver);
 %quiver(QX,QY,zeros(length(qy),length(qx)),-both,'linewidth',1.5, 'AutoScaleFactor',.25,'color',C.quiver);
 grid on
-set(gca,'xGrid','off','GridLineStyle','--','gridalpha',.5);
+set(gca,'xGrid','off','GridLineStyle','--');
 
 legend([plt1{2},ptch],{'ESS','Bistable region'},'location','sw')
 
@@ -417,14 +417,10 @@ text(.05,ymax,'Learning rate $(L_{0\rightarrow 1})$','HorizontalAlignment','cent
 %     plot([1 1]*(i)*.02,[0 4000],'color',[.15 .15 .15 .15])
 % end
 for i = 1:10
-    plot(bis.d(pib.stability(:,1)==1),Lgrid(:,i),'--','color',[.15 .15 .15 .5])
+    plot(bis.d(pib.stability(:,1)==1),Lgrid(:,i),'--','color',[.15 .15 .15 .15])
 end
 patch([0 pfb.D(1) pfb.D(1) 0],[0 0 ymax ymax],[.15 .15 .15],'edgealpha',0,'facealpha',.15)
 ylim([0 ymax])
-
-text(.092,75,'\textbf{a}')
-text(.092,250,'\textbf{b}')
-text(.092,500,'\textbf{c}')
 
 
 set(gcf,'Position',[550 350 700 500])
@@ -511,7 +507,7 @@ xlabel('Dist. CNDD $(d_1)$')
 dummy1 = plot(nan,nan,'k-');
 dummy2 = plot(nan,nan,'k--');
 nothing = plot(nan,nan,'color','none');
-legend([pltnm pltm pltc nothing nothing nothing dummy1 dummy2 ptch],{'Non-migrants ($\sigma^*>0$)','Migrants\hspace{20.5pt} ($\sigma^*>0$)','Non-migrants ($\sigma^*=0$)',...
+legend([pltnm pltm pltc nothing nothing nothing dummy1 dummy2 ptch],{'Non-migrants ($\sigma*>0$)','Migrants\hspace{20.5pt} ($\sigma*>0$)','Non-migrants ($\sigma*=0$)',...
     '','','','Stable eq.','Saddle point','Bi-stable region'},'numcolumns',3,'location','northoutside')
 
 
@@ -662,7 +658,7 @@ collapse = popt.TotPop; collapse(popt.prop>tol) = nan;
 hold on
 surf(popt.ay,popt.tau,collapse,popt.prop-.01,'edgecolor','none');
 view(45,55)
-colormap(customcolormap([0 .15 .5 .99 1],{'#a0ffa0',rgb2hex(C.mig),rgb2hex((C.nonmig*2+C.mig)/3),rgb2hex(C.nonmig),rgb2hex(C.nonmig/2)}))
+colormap(customcolormap([0 .2 .4 .99 1],{'#a0ffa0',rgb2hex(C.mig),rgb2hex((C.nonmig*2+C.mig)/3),rgb2hex(C.nonmig),rgb2hex(C.nonmig/2)}))
 c = colorbar;
 ylabel(c,'Migrating fraction of population','interpreter','latex')
 

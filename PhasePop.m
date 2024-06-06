@@ -17,8 +17,13 @@ Xspan = [0 3*max(steqx)];
 Yspan = [0 3*max(steqy)];
 
 %% Arrows
-X = linspace(Xspan(1),Xspan(2),10);
-Y = linspace(Yspan(1),Yspan(2),10);
+X = linspace(Xspan(1),Xspan(2),11);
+X = X + (X(2)-X(1))/2;
+X(end) = [];
+
+Y = linspace(Yspan(1),Yspan(2),11);
+Y = Y + (Y(2)-Y(1))/2;
+Y(end) = [];
 
 nump1 = length(X);
 nump2 = length(Y);
@@ -53,7 +58,7 @@ for i = 1:num1*2
     disp([num2str(i) ' / ' num2str(2*num1) ' (1)'])
 end
 %% Transparrent lines
-num2 = 75;
+num2 = 100;
 rng(1)
 X0r = rand(num2)*Xspan(2);
 Y0r = rand(num2)*Yspan(2);

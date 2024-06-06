@@ -54,15 +54,15 @@ pha.Ay = Ay;
 pha.D = D;
 pha.Dind = A;
 pha.bif = Dnan(A+1);
-pha.numparms = {prec,tol};
-save('Pha.mat','pha');
+pha.numparms = {prec,nump1,nump2};
+%save('Pha.mat','pha');
 %%
 figure(1)
 imagesc(log(Ay),log(B),log(Dnan(A+1)))
 %%
 nump1 = 18;
-minMu = .1;
-maxMu = .66666;
+minMu = .3;
+maxMu = .7;
 Mu = linspace(minMu,maxMu,nump1);
 
 nump2 = 24;
@@ -85,13 +85,13 @@ prec = 10.^(1:6);
 A = zeros(nump2,nump1);%Index for D as critical value
 P = zeros(nump2,nump1);%Precision utilised
 TAU = zeros(nump2,nump1);%ESS
-for j = 1:nump1 %loops over d
-    for i = 1:nump2 %loops over mu
+for i = 1:nump1 %loops over mu
+    for j = 1:nump2 %loops over d
         for p = 1:length(prec)-2 %Loop that increases precision (and zooms) when no ESS is found
-            tau = linspace(0,(b-Mu(j))/prec(p),(prec(p+2))/prec(p));
+            tau = linspace(0,(b-Mu(i))/prec(p),(prec(p+2))/prec(p));
             ENTERED = false;
             for k = 1:nump3
-                X0 = [b-Mu(j),(b-Mu(j))/Ay(k)];
+                X0 = [b-Mu(i),(b-Mu(i))/Ay(k)];
                 [eq,st] = evolutionaryEq(@myModel,X0,ax,Ay(k),b,c,D(j),Mu(i),tau,1e-8);
                 if ~isempty(eq)
                     TAU(i,j) = eq(end);
@@ -111,7 +111,11 @@ for j = 1:nump1 %loops over d
                 break
             end
         end
-        disp(['Ay = ' num2str(Aynan(A(i,j)+1)) ' (' num2str(i) '/' num2str(nump1) ') (' num2str(j) '/' num2str(nump2) ')'])
+        try
+            disp(['Ay = ' num2str(Aynan(A(i,j)+1)) ' (' num2str(i) '/' num2str(nump1) ') (' num2str(j) '/' num2str(nump2) ')'])
+        catch
+            disp('something went wront in disp')
+        end
     end
 end
 toc

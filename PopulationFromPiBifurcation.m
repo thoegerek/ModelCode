@@ -38,6 +38,8 @@ pfb.U = U;
 pfb.xc = xc;
 pfb.xn = xn;
 pfb.D = D;
+
+
 pfb.data = {ax,ay,b,c,mu};
 pfb.dataDesc = {'ax','ay','b','c','mu'};
 save('PopFromBif.mat','pfb');
