@@ -59,20 +59,20 @@ pha.numparms = {prec,nump1,nump2};
 %%
 figure(1)
 imagesc(log(Ay),log(B),log(Dnan(A+1)))
-%%
-nump1 = 18;
+%% This one
+nump1 = 36;
 minMu = .3;
 maxMu = .7;
 Mu = linspace(minMu,maxMu,nump1);
 
-nump2 = 24;
+nump2 = 36;
 minlogD = -6;
 maxlogD = 6;
 logD = linspace(minlogD,maxlogD,nump2);
 D = exp(logD);
 
 
-Ay = kron(10.^(-5:5),[1,2,3,5]);
+Ay = kron(10.^(-10:5),[1,2,3,5]);
 Aynan = [nan,Ay]; %For disping
 nump3 = length(Ay);
 
@@ -81,15 +81,14 @@ b = 1;
 c = 1;
 %%
 tic
-prec = 10.^(1:6);
-A = zeros(nump2,nump1);%Index for D as critical value
+A = zeros(nump2,nump1);%Index for Ay as critical value
 P = zeros(nump2,nump1);%Precision utilised
 TAU = zeros(nump2,nump1);%ESS
 for i = 1:nump1 %loops over mu
-    for j = 1:nump2 %loops over d
-        for p = 1:length(prec)-2 %Loop that increases precision (and zooms) when no ESS is found
-            tau = linspace(0,(b-Mu(i))/prec(p),(prec(p+2))/prec(p));
-            ENTERED = false;
+    for j = 1:21 %loops over d
+        for p = 1:5 %Loop that increases precision (and zooms) when no ESS is found
+            tau = linspace(0,(b-Mu(i)),101).^p;
+            ENTERED = false; %can we know this for sure?
             for k = 1:nump3
                 X0 = [b-Mu(i),(b-Mu(i))/Ay(k)];
                 [eq,st] = evolutionaryEq(@myModel,X0,ax,Ay(k),b,c,D(j),Mu(i),tau,1e-8);
@@ -106,8 +105,8 @@ for i = 1:nump1 %loops over mu
                     break
                 end
             end
-            if A(i,j) > 0 %If A>0, then a value was found
-                P(i,j) = prec(p);
+            if A(i,j) > 0 && (j == 1 || A(i,j) >= A(i,j-1))  %If A>0, then a value was found, If A(i,j) < A(i,j-1), that value is incorrect
+                P(i,j) = p;
                 break
             end
         end
@@ -124,8 +123,9 @@ figure(2)
 imagesc(log(D),Mu,log(Aynan(A+1)))
 %%
 pha = struct;
-pha.B = B;
-pha.Ay = Ay;
+pha.Mu = Mu;
 pha.D = D;
-pha.ind = A;
-%save('Pha.mat','pha');
+pha.A = A;
+pha.Ay = Aynan(A+1);
+pha.TAU = TAU;
+save('Pha.mat','pha');

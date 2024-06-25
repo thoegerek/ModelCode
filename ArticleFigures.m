@@ -14,12 +14,12 @@ load('PiB_mu.mat')
 load('PopFromBif.mat')
 load('PopFromBif_ay.mat')
 load('PopFromBif_mu.mat')
-load('Bistability_d.mat')
+load('Bistability_d.mat') 
 load('Pop_Plot_1D.mat')
 load('Pop_tau.mat')
 % load('AXAY.mat')
 % load('PiB_dimless.mat')
-%load('Pha.mat');
+load('Pha.mat');
 % load('Hys.mat');
 
 % Color (and names) definitions
@@ -48,36 +48,20 @@ hold on
 plt(1).LineWidth = 1;
 colororder([C.totpop;
     repmat([C.nonmig;C.mig],12,1)]);
-% styles = flip({'^','^','^','^','^','^'...
-%     's','s','s','s',...
-%     'diamond','diamond','diamond','diamond',...
-%     'o','o'});
 
 styles = flip({'-','-.','-.','-.','-.','-.','-.',...
 '-','-','-','-',...
 '-.','-.','-.','-.',...
 '-','-','-','-','-','-','-','-','-','-'});
 
-% spacing = 100;
-% mkp1 = interp1(inv.T1,inv.X1,1:spacing:Tcat(end));
-% mkp2 = interp1(inv.T2,inv.X2,1:spacing:Tcat(end));
-% mkp3 = interp1(inv.T3,inv.X3,1:spacing:Tcat(end));
-% mkp4 = interp1([inv.T4;inv.T5(2:end);inv.T6(2:end)],[inv.X4;inv.X5(2:end,:);inv.X6(2:end,:)],1:spacing:Tcat(end));
-% 
-% plot(1:spacing:Tcat(end),mkp1,'.')
-% plot(1:spacing:Tcat(end),mkp2,'.')
-% plot(1:spacing:Tcat(end),mkp3,'.')
-% plot(1:spacing:Tcat(end),mkp4,'.')
-
-
 lines = findobj(gca,'Type','line');
 for i = 1:length(lines)
     lines(i).LineStyle= styles(i);
 end
 
-plot(inv.T2(find(max(inv.X2(:,3:4),[],2)>=ymin,1,'first')),ymin,'^','color',C.bireg,'markerfacecolor',C.bireg,'markersize',6);
-plot(inv.T3(find(max(inv.X3(:,3:4),[],2)>=ymin,1,'first')),ymin,'s','color',C.bireg,'markerfacecolor',C.bireg,'markersize',8);
-plot(inv.T4(find(max(inv.X4(:,3:4),[],2)>=ymin,1,'first')),ymin,'diamond','color',C.bireg,'markerfacecolor',C.bireg,'markersize',7);
+plot(225,ymin,'^','color',C.bireg,'markerfacecolor',C.bireg,'markersize',8);%inv.T2(find(max(inv.X2(:,3:4),[],2)>=ymin,1,'first'))
+plot(800,ymin,'s','color',C.bireg,'markerfacecolor',C.bireg,'markersize',10);%inv.T3(find(max(inv.X3(:,3:4),[],2)>=ymin,1,'first'))
+plot(1450,ymin,'diamond','color',C.bireg,'markerfacecolor',C.bireg,'markersize',9);%inv.T4(find(max(inv.X4(:,3:4),[],2)>=ymin,1,'first'))
 
 
 text(25,max(inv.X1,[],'all')+40,'$\sigma = 1$')
@@ -92,7 +76,7 @@ xlim([0,Tcat(end)])
 ylim([ymin ymax])
 legend([plt(8),plt(9),plt(1)],{'Non-migrating population','Migrating population','Total population',...
     },'location','nw');
-xlabel('Time (years)')
+xlabel('Time')
 ylabel('Population number')
 
 
@@ -136,9 +120,9 @@ plot(.9,.8,'<','color',[.5 .5 .5],'markerfacecolor',[.5 .5 .5])
 
 example = plot(nan,nan,'<--','color',[.5 .5 .5],'linewidth',1.5,'markerfacecolor',[.5 .5 .5]);
 
-plot(1,.8,'^','color',C.bireg,'markerfacecolor',C.bireg,'markersize',6);
-plot(.8,.6,'s','color',C.bireg,'markerfacecolor',C.bireg,'markersize',8);
-plot(.6,.4,'diamond','color',C.bireg,'markerfacecolor',C.bireg,'markersize',7);
+plot(1,.8,'^','color',C.bireg,'markerfacecolor',C.bireg,'markersize',8);
+plot(.8,.6,'s','color',C.bireg,'markerfacecolor',C.bireg,'markersize',10);
+plot(.6,.4,'diamond','color',C.bireg,'markerfacecolor',C.bireg,'markersize',9);
 
 legend([seq(1),example],{'Evolutionary Stable Strategy','Path of adaptation (fig. 1)'...
     },'location','ne','fontsize',12);
@@ -262,9 +246,9 @@ nothing = plot(nan,'color',[0 0 0 0]);
 lgd = legend([plt(5),plt(2),dummy(1),dummy(2)],{'Non-migrants','Migrants','Stable eq.','Saddle points'},'location','nw');
 lgd.NumColumns = 2;
 
-text(.02,1100,'\textbf{a}')
-text(.355,1100,'\textbf{b}')
-text(.935,1100,'\textbf{c}')
+text(.02,1100,'\textbf{I}')
+text(.365,1100,'\textbf{II}')
+text(.935,1100,'\textbf{III}')
 
 xlim([bif.tau(1) bif.tau(end)])
 ylim([ymin ymax])
@@ -291,13 +275,12 @@ for i = 1:length(php.XT)
     end
 end
 
-sols = plot(nan,nan,'color',[.5 .5 .5]);%plot(A1(:,1),A1(:,2),'-k');
+sols = plot(nan,nan,'color',[.5 .5 .5]);
 manif = plot(nan,nan,'k','linewidth',1.5);
-%plot(A2(:,1),A2(:,2),'-k')
-%plot(A3(:,1),A3(:,2),'-k')
 
 norms = sqrt(php.dx.^2+php.dy.^2);
-quiver(php.X,php.Y,php.dx./sqrt(norms),php.dy./sqrt(norms),'linewidth',1, 'AutoScaleFactor',1,'color',[.6 .6 .6])
+quiver(php.X,php.Y,php.dx./sqrt(norms),php.dy./sqrt(norms),'linewidth',3, 'AutoScaleFactor',1,'color',[.9 .9 .9])
+quiver(php.X,php.Y,php.dx./sqrt(norms),php.dy./sqrt(norms),'linewidth',1, 'AutoScaleFactor',1,'color',[.4 .4 .4])
 
 psta = plot(php.steqx,php.steqy,'o','color',C.stable,'markersize',10,'linewidth',2);
 pusta = plot(php.usteqx(1),php.usteqy(1),'o','color',C.unstable,'markersize',10,'linewidth',2);
@@ -394,9 +377,9 @@ for i = 1:10
     Lgrid(:,i) = (i*.1)^2*pfb.D'.*pfb.X(:,1).*pfb.X(:,2).*(pfb.X(:,1)*pfb.data{1}-pfb.X(:,2)*pfb.data{2}); %works without the ^2 (?)
 end
 
-text(.0015,.562,'\textbf{a}')
-text(.0073,.56,'\textbf{b}')
-text(.0215,.562,'\textbf{c}')
+text(.0022,.562,'\textbf{I}')
+text(.0067,.56,'\textbf{II}')
+text(.0215,.562,'\textbf{III}')
 
 helppoint(1) = min(pib.d(pib.stability(:,1)==1)); %mssing point leftmost on top due to num. inac.
 helppoint(2) = Luu(5)-(Luu(6)-Luu(5))*6;
@@ -422,9 +405,9 @@ end
 patch([0 pfb.D(1) pfb.D(1) 0],[0 0 ymax ymax],[.15 .15 .15],'edgealpha',0,'facealpha',.15)
 ylim([0 ymax])
 
-text(.092,75,'\textbf{a}')
-text(.092,250,'\textbf{b}')
-text(.092,500,'\textbf{c}')
+text(.092,75,'\textbf{I}','horizontalalignment','center')
+text(.092,250,'\textbf{II}','horizontalalignment','center')
+text(.092,450,'\textbf{III}','horizontalalignment','center')
 
 
 set(gcf,'Position',[550 350 700 500])
@@ -461,8 +444,11 @@ ymaxsoc = .4;
 
 tiledlayout(3,3, 'TileIndexing', 'columnmajor')
 nexttile([2 1])
-patch([Bi_d(1) Bi_d(end) Bi_d(end) Bi_d(1)],[-ymax -ymax 2*ymax 2*ymax],C.bireg,'facealpha',.2,'edgecolor',C.bireg);
+patch([Bi_d(1) Bi_d(end) Bi_d(end) Bi_d(1)],[-ymax -ymax 2*ymax 2*ymax],C.bireg,'facealpha',.2,'edgealpha',0);
 hold on
+plot([Bi_d(1) Bi_d(1)],[-ymax 2*ymax],'color',C.bireg)
+plot([Bi_d(end) Bi_d(end)],[-ymax ymax*.85],'color',C.bireg)
+
 plot(pfb.D,pfb.X(:,1),'color',C.nonmig,'linewidth',1.5)
 plot(pfb.D,pfb.X(:,2),'color',C.mig,'linewidth',1.5)
 plot(Bi_d,sad_d(:,1),'--','color',C.nonmig,'linewidth',1.5)
@@ -471,7 +457,7 @@ plot(Bi_d,xc_d,'-','color',C.nonmig,'linewidth',1.5)
 plot([0 pfb.D(end)],[carry_d,carry_d],'k','linewidth',1.5)
 %plot(.02:.004:.028,repmat(1000,1,3),'^','color',C.mig,'markerfacecolor',C.mig)
 %plot([pfbay.data{4} pfbay.data{4}],[0,ymax],'k')
-text(.03,975,[strcat('$d_1$ = ',num2str(pfb.data{2}));strcat("$\mu$ = ",num2str(pfb.data{5}))],'HorizontalAlignment', 'right','Verticalalignment','top');
+text(.03,ymax,[strcat('$d_1$ = ',num2str(pfb.data{2}));strcat("$\mu$ = ",num2str(pfb.data{5}))],'HorizontalAlignment', 'right','Verticalalignment','top');
 ylim([0 ymax])
 xlim([0 .03])
 xlabel('Learning rate coefficient $(c)$')
@@ -493,8 +479,11 @@ plot(pib.d,(pib.eq(:,2)-pib.eq(:,1))./pib.eq(:,2),':','linewidth',1.5)
 ylim([0 ymaxsoc]);
 
 nexttile([2 1])
-ptch = patch([Bi_ay(1) Bi_ay(end) Bi_ay(end) Bi_ay(1)],[-ymax -ymax 2*ymax 2*ymax],C.bireg,'facealpha',.2,'edgecolor',C.bireg);
+ptch = patch([Bi_ay(1) Bi_ay(end) Bi_ay(end) Bi_ay(1)],[-ymax -ymax 2*ymax 2*ymax],C.bireg,'facealpha',.2,'edgealpha',0);
 hold on
+plot([Bi_ay(1) Bi_ay(1)],[-ymax ymax],'color',C.bireg)
+plot([Bi_ay(end) Bi_ay(end)],[-ymax ymax*.85],'color',C.bireg)
+
 pltnm = plot(pfbay.Ay,pfbay.X(:,1),'color',C.nonmig,'linewidth',1.5);
 pltm = plot(pfbay.Ay,pfbay.X(:,2),'color',C.mig,'linewidth',1.5);
 plot(Bi_ay,sad_ay(:,1),'--','color',C.nonmig,'linewidth',1.5)
@@ -503,9 +492,9 @@ plot(Bi_ay,xc_ay,'-','color',C.nonmig,'linewidth',1.5)
 pltc = plot([0 .001],[carry_ay,carry_ay],'color',[0 0 0],'linewidth',1.5);
 %plot(.00025,1000,'^','color',C.mig,'markerfacecolor',C.mig)
 %plot([pfb.data{2} pfb.data{2}],[0,ymax],'k')
-text(.001,975,[strcat('$c$ = ',num2str(pfbay.data{3}));strcat("$\mu$ = ",num2str(pfbay.data{5}))],'HorizontalAlignment', 'right','Verticalalignment','top');
+text(.00085,ymax,[strcat('$c$ = ',num2str(pfbay.data{3}));strcat("$\mu$ = ",num2str(pfbay.data{5}))],'HorizontalAlignment', 'right','Verticalalignment','top');
 ylim([0 ymax])
-xlim([.0002 .001])
+xlim([.0001 .001])
 xlabel('Dist. CNDD $(d_1)$')
 
 dummy1 = plot(nan,nan,'k-');
@@ -513,6 +502,9 @@ dummy2 = plot(nan,nan,'k--');
 nothing = plot(nan,nan,'color','none');
 legend([pltnm pltm pltc nothing nothing nothing dummy1 dummy2 ptch],{'Non-migrants ($\sigma^*>0$)','Migrants\hspace{20.5pt} ($\sigma^*>0$)','Non-migrants ($\sigma^*=0$)',...
     '','','','Stable eq.','Saddle point','Bi-stable region'},'numcolumns',3,'location','northoutside')
+set(gca,'xtick',[1 3 5 7]*1e-4)
+set(gca,'xticklabel',{1 3 5 7})
+xlim([.0001 .00085])
 
 
 nexttile
@@ -520,7 +512,7 @@ plot([Bi_ay Bi_ay(end) .001],[1-ploss_ay(:,1);0;0],'color',C.nonmig,'linewidth',
 hold on
 plot([Bi_ay Bi_ay(end) .001],[1-ploss_ay(:,2);0;0],'color',C.mig,'linewidth',1.5)
 ylim([0 1])
-xlim([.0002 .001])
+xlim([.0001 .001])
 xlabel('Dist. CNDD $(d_1)$')
 % lgd = legend({'Non-migrants','Migrants'},'location','northoutside');
 % lgd.Position(1) = lgd.Position(1) + .02;
@@ -530,10 +522,17 @@ colororder(C.stable);
 yyaxis right
 plot(pibay.ay,(pibay.eq(:,2)-pibay.eq(:,1))./pibay.eq(:,2),':','linewidth',1.5)
 ylim([0 ymaxsoc]);
+annotation('textbox',[0.575,0.38,0,0],'string','$\times 10^{-4}$')
+set(gca,'xtick',[1 3 5 7]*1e-4)
+set(gca,'xticklabel',{1 3 5 7})
+xlim([.0001 .00085])
 
 nexttile([2 1])
-patch([Bi_mu(1) Bi_mu(end) Bi_mu(end) Bi_mu(1)],[-ymax -ymax 2*ymax 2*ymax],C.bireg,'facealpha',.2,'edgecolor',C.bireg);
+patch([Bi_mu(1) Bi_mu(end) Bi_mu(end) Bi_mu(1)],[-ymax -ymax 2*ymax 2*ymax],C.bireg,'facealpha',.2,'edgealpha',0);
 hold on
+plot([Bi_mu(1) Bi_mu(1)],[-ymax 2*ymax],'color',C.bireg)
+plot([Bi_mu(end) Bi_mu(end)],[-ymax ymax*.85],'color',C.bireg)
+
 plot(pfbmu.Mu,pfbmu.X(:,1),'color',C.nonmig,'linewidth',1.5)
 plot(pfbmu.Mu,pfbmu.X(:,2),'color',C.mig,'linewidth',1.5)
 plot(Bi_mu,sad_mu(:,1),'--','color',C.nonmig,'linewidth',1.5)
@@ -542,10 +541,12 @@ plot(Bi_mu,xc_mu,'-','color',C.nonmig,'linewidth',1.5)
 plot([0 1],carry_mu,'color',[0 0 0],'linewidth',1.5)
 %plot(.415:.02:.485,repmat(1000,1,4),'^','color',C.mig,'markerfacecolor',C.mig)
 %plot([pfb.data{5} pfb.data{5}],[0,ymax],'k')
-text(.625,975,[strcat('$c$ = ',num2str(pfbmu.data{4}));strcat("$d_1$ = ",num2str(pfbmu.data{2}))],'HorizontalAlignment', 'right','Verticalalignment','top');
+text(.625,ymax,[strcat('$c$ = ',num2str(pfbmu.data{4}));strcat("$d_1$ = ",num2str(pfbmu.data{2}))],'HorizontalAlignment', 'right','Verticalalignment','top');
 ylim([0 ymax])
 xlim([.4 .625])
 xlabel('Mortality rate $(\mu)$')
+annotation('textbox',[0.575,0.098,0,0],'string','$\times 10^{-4}$')
+
 
 
 nexttile
@@ -566,20 +567,37 @@ set(gcf,'Position',[350 150 1200 800])
 set(findall(gcf,'-property','FontSize'),'FontSize',16)
 set(findall(gcf,'-property','interpreter'),'interpreter','latex')
 %% Phase plot of critical values in strat
-% figure 
-% names{get(gcf,'number')} = 'CriticalVals';
-% 
-% contourf(1./pha.B,log(pha.D),log(Ay(pha.ind)))
-% ylabel('Learning rate coefficient nat. log. (ln(c))')
-% xlabel('Natural mortality rate ($\mu$)')
-% set(gca,'ydir','normal')
-% cb = colorbar;
-% yl = ylabel(cb,'Maximum sustained migration value of CNDD in distant habitat (d_{1})','FontSize',12,'Rotation',270);
-% yl.Position(1) = yl.Position(1) + 1.5;
-%     
-% set(gcf,'Position',[550 350 700 500])
-% set(findall(gcf,'-property','FontSize'),'FontSize',12)
-% set(findall(gcf,'-property','interpreter'),'interpreter','latex')
+figure 
+names{get(gcf,'number')} = 'CriticalVals';
+
+imagesc(log(pha.D),pha.Mu,log10(pha.Ay))
+xlabel('Learning rate coefficient log (log$_{10}(c)$)')
+ylabel('Mortality rate ($\mu$)')
+set(gca,'ydir','normal')
+cb = colorbar;
+yl = ylabel(cb,'Dist. CNDD log (log$_{10}(d_1)$)','FontSize',14,'Rotation',270,'interpreter','latex');
+yl.Position(1) = yl.Position(1) + 1.5;
+
+hold on
+Traces = 10.^-[99 6 5 4 3 2 1];
+Perims = cell(length(Traces),1);
+for i = 1:length(Traces)
+    Perims{i} = bwperimtrace(pha.Ay > Traces(i),log([pha.D(1) pha.D(end)]),[pha.Mu(1) pha.Mu(end)]);
+    plot(Perims{i}{1}(:,1),Perims{i}{1}(:,2),'k','linewidth',1.5)
+end  
+
+text(-6,.67,'$<10^{-6}$')
+text(-5,.6,'$<10^{-5}$')
+text(-3.2,.55,'$<10^{-4}$')
+text(-1.7,.5,'$<10^{-3}$')
+text(0.2,.44,'$<10^{-2}$')
+text(2.8,.38,'$<10^{-1}$')
+text(5.2,.33,'$<1$')
+
+
+set(gcf,'Position',[550 350 700 500])
+set(findall(gcf,'-property','FontSize'),'FontSize',14)
+set(findall(gcf,'-property','interpreter'),'interpreter','latex')
     %% Pip of 4 scenarios
 % fig = figure;
 %names{get(gcf,'number')} = 'PIP123';
@@ -662,7 +680,7 @@ collapse = popt.TotPop; collapse(popt.prop>tol) = nan;
 hold on
 surf(popt.ay,popt.tau,collapse,popt.prop-.01,'edgecolor','none');
 view(45,55)
-colormap(customcolormap([0 .15 .5 .99 1],{'#a0ffa0',rgb2hex(C.mig),rgb2hex((C.nonmig*2+C.mig)/3),rgb2hex(C.nonmig),rgb2hex(C.nonmig/2)}))
+colormap(customcolormap([0 .15 .3 .5 .99 1],{'#a0ffa0',rgb2hex(C.mig),'#208060',rgb2hex(C.nonmig+[-.1 .1 0]),rgb2hex(C.nonmig),rgb2hex(C.nonmig/2)}))
 c = colorbar;
 ylabel(c,'Migrating fraction of population','interpreter','latex')
 
@@ -670,7 +688,7 @@ spacing1 = 125;  % better grid size
 for i = [1:spacing1:nump1,nump1]
     plot3(popt.ay, ones(nump2,1)*popt.tau(i), popt.TotPop(i,:),'-k');
 end
-spacing2 = 125;  % better grid size
+spacing2 = 134;  % better grid size
 for i = [1:spacing2:nump2,nump2]
     plot3(ones(nump1,1)*popt.ay(i), popt.tau, popt.TotPop(:,i),'-k');
 end
@@ -711,7 +729,11 @@ ylab = ylabel('Sociality ($\sigma$)');
 %ylab.Position(2) = .3;
 zlabel('Total population number')
 
-legend([p1,p2],{'Chosen strategy\,','Ideal strategy'},'location','ne')
+legend([p1,p2],{'Chosen ssociality','Ideal sociality'},'location','ne')
+set(gca,'Xtick',[1 3 5 7 9]*1e-4)
+set(gca,'XTickLabel',{1 3 5 7 9})
+annotation('textbox',[.06 .32 0 0],'string','$\times 10^{-4}$')
+set(gca,'Ztick',[0 2500 5000])
 
 set(gcf,'Position',[550 350 700 500])
 set(findall(gcf,'-property','FontSize'),'FontSize',17)
@@ -793,11 +815,11 @@ set(findall(gcf,'-property','interpreter'),'interpreter','latex')
 % set(findall(gcf,'-property','interpreter'),'interpreter','latex')
 %% exporting
 
-path = 'C:/Users/thekn/Pictures/Article1/';
-
-for i = 1:length(names)
-    if ishandle(i)
-        figure(i)
-        export_fig([path,names{i}],'-png','-transparent','-m5')
-    end
-end
+% path = 'C:/Users/thekn/Pictures/Article1/';
+% 
+% for i = 1:length(names)
+%     if ishandle(i)
+%         figure(i)
+%         export_fig([path,names{i}],'-png','-transparent','-m5')
+%     end
+% end

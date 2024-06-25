@@ -14,9 +14,9 @@ c = .2;
 d = .015;
 mu = .5;
 
-nump2 = 1000;
+nump2 = 1200;
 maxAy = .001;
-minAy = .0002;
+minAy = .0001;
 Ay = linspace(minAy,maxAy,nump2);
 
 nump1 = 1000;
@@ -95,7 +95,7 @@ spacing1 = 100;  % better grid size
 for i = [1:spacing1:nump1, nump1]
     plot3(Ay, ones(nump2,1)*tau(i), TotPop(i,:),'-k');
 end
-spacing2 = 10;  % better grid size
+spacing2 = 100;  % better grid size
 for i = [1:spacing2:nump2, nump2]
     plot3(ones(nump1,1)*Ay(i), tau, TotPop(:,i),'-k');
 end

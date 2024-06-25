@@ -58,8 +58,8 @@ mon = tau(monind);
 pol = max(eq(st==-1));
 [~,polind] = min(abs(pol-tau));
 %%
-pp1d.data = {ax,ay,b,c,d,mu,X0};
-pp1d.dataDesc = {'ax','ay','b','c','d','mu','X0'};
+pp1d.data = {ax,ay,b,c,d,mu};
+pp1d.dataDesc = {'ax','ay','b','c','d','mu'};
 pp1d.tau = tau;
 pp1d.xPopb = xPopb;
 pp1d.xPops = xPops;
@@ -71,7 +71,7 @@ pp1d.mon = mon;
 pp1d.monind = monind;
 pp1d.TotPopb = TotPopb;
 pp1d.TotPops = TotPops;
-save('Pop_Plot_1D.mat','pp1d');
+%save('Pop_Plot_1D.mat','pp1d');
 %%
 figure(1)
 close(1)
