@@ -1,26 +1,30 @@
-function [f,eqs,stability] = fourPipf(ax,ay,b,c,d,mu,nump,uppercutoff)
+function [f,eqs,stability] = fourPipf(a1,a2,a3,a4,b,c,d,mu,nump,uppercutoff)
 %pip as a function
 
-M = linearisedInvader(false);
+M = fourLinearisedInvader(false);
 f = zeros(nump,nump,2);
 
 dtau = ((b-mu)/c)/(nump-1) * uppercutoff;
 tau = 0:dtau:(b-mu)/c *uppercutoff;
 
-X = zeros(nump,2);
-Y = zeros(nump,2);
+N1 = zeros(nump,2);
+N2 = zeros(nump,2);
+N3 = zeros(nump,2);
+N4 = zeros(nump,2);
 for r = 1:nump
-    [eqx,eqy,stability] = equilibriumsStability(ax,ay,b,c,d,mu,tau(r),true); %This is very slow - try to do this from (x0,0) instead of globally?
+    [eq1,eq2,eq3,eq4,stability] = fourEquilibriumsStability(a1,a2,a3,a4,b,c,d,mu,tau(r),true); %This is very slow - try to do this from (x0,0) instead of globally?
     nStab = sum(stability == -1);
-    X(r,1:nStab) = eqx(stability == -1);
-    Y(r,1:nStab) = eqy(stability == -1);
+    N1(r,1:nStab) = eq1(stability == -1);
+    N2(r,1:nStab) = eq2(stability == -1);
+    N3(r,1:nStab) = eq3(stability == -1);
+    N4(r,1:nStab) = eq4(stability == -1);
 
-    [Y(r,1:nStab),ord] = sort(Y(r,1:nStab));
-    X(r,1:nStab) = X(r,ord);
+%     [N2(r,1:nStab),ord] = sort(N2(r,1:nStab));
+%     N1(r,1:nStab) = N1(r,ord);
     
     for j = 1:2
         for i = 1:nump
-            [~,lambda] = eig(M(ax,ay,b,c,d,mu,tau(i),tau(r),X(r,j),Y(r,j)));
+            [~,lambda] = eig(M(a1,a2,a3,a4,b,c,d,mu,N1(r,j),N2(r,j),N3(r,j),N4(r,j),tau(i),tau(r)));
             f(i,r,j) = max(diag(lambda));
         end
         if nStab == 1
@@ -34,11 +38,11 @@ end
 
 eqs = 0;
 stability = [];
-for j = 1:size(X,2)
+for j = 1:size(N1,2)
     dfd = zeros(nump-1,1);
     for i = 2:nump-1
-        [~,lu] = eig(M(ax,ay,b,c,d,mu,tau(i+1),tau(i),X(i,j),Y(i,j)));
-        [~,ld] = eig(M(ax,ay,b,c,d,mu,tau(i-1),tau(i),X(i,j),Y(i,j)));
+        [~,lu] = eig(M(a1,a2,a3,a4,b,c,d,mu,N1(r,j),N2(r,j),N3(r,j),N4(r,j),tau(i),tau(i+1)));
+        [~,ld] = eig(M(a1,a2,a3,a4,b,c,d,mu,N1(r,j),N2(r,j),N3(r,j),N4(r,j),tau(i),tau(i-1)));
         dfd(i) = max(diag(ld))-max(diag(lu));
     end
     dfd(1) = [];

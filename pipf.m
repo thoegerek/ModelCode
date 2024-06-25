@@ -1,7 +1,7 @@
 function [f,eqs,stability] = pipf(ax,ay,b,c,d,mu,nump,uppercutoff)
 %pip as a function
 
-M = linearisedInvader(false);
+M = fourLinearisedInvader(false);
 f = zeros(nump,nump,2);
 
 dtau = ((b-mu)/c)/(nump-1) * uppercutoff;
@@ -10,7 +10,7 @@ tau = 0:dtau:(b-mu)/c *uppercutoff;
 X = zeros(nump,2);
 Y = zeros(nump,2);
 for r = 1:nump
-    [eqx,eqy,stability] = equilibriumsStability(ax,ay,b,c,d,mu,tau(r),true); %This is very slow - try to do this from (x0,0) instead of globally?
+    [eqx,eqy,stability] = fourEquilibriumsStability(ax,ay,b,c,d,mu,tau(r),true); %This is very slow - try to do this from (x0,0) instead of globally?
     nStab = sum(stability == -1);
     X(r,1:nStab) = eqx(stability == -1);
     Y(r,1:nStab) = eqy(stability == -1);
@@ -20,7 +20,7 @@ for r = 1:nump
     
     for j = 1:2
         for i = 1:nump
-            [~,lambda] = eig(M(ax,ay,b,c,d,mu,tau(i),tau(r),X(r,j),Y(r,j)));
+            [~,lambda] = eig(M(a1,a2,a3,a4,b,c,d,mu,n1r,n2r,n3r,n4r,X(r,j),Y(r,j),tau(i),tau(r)));
             f(i,r,j) = max(diag(lambda));
         end
         if nStab == 1
