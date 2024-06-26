@@ -12,15 +12,17 @@ N2 = zeros(nump,2);
 N3 = zeros(nump,2);
 N4 = zeros(nump,2);
 for r = 1:nump
-    [eq1,eq2,eq3,eq4,stability] = fourEquilibriumsStability(a1,a2,a3,a4,b,c,d,mu,tau(r),true); %This is very slow - try to do this from (x0,0) instead of globally?
+    [eq1,eq2,eq3,eq4,stability] = fourEquilibriumsStability(a1,a2,a3,a4,b,c,d,mu,tau(r),true); 
     nStab = sum(stability == -1);
     N1(r,1:nStab) = eq1(stability == -1);
     N2(r,1:nStab) = eq2(stability == -1);
     N3(r,1:nStab) = eq3(stability == -1);
     N4(r,1:nStab) = eq4(stability == -1);
 
-%     [N2(r,1:nStab),ord] = sort(N2(r,1:nStab));
-%     N1(r,1:nStab) = N1(r,ord);
+     [N2(r,1:nStab),ord] = sort(N2(r,1:nStab));
+     N1(r,1:nStab) = N1(r,ord);
+     N3(r,1:nStab) = N3(r,ord);
+     N4(r,1:nStab) = N4(r,ord);
     
     for j = 1:2
         for i = 1:nump

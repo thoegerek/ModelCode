@@ -1,14 +1,14 @@
 a1 = .001;
-a2 = .0003;
-a3 = .0004;
-a4 = .0005;
+a2 = .0009;
+a3 = .0009;
+a4 = .0009;
 b = 1;
 c = .2;
 d = .015;
 mu = .5;
 
 
-nump = 5000;
+nump = 250;
 cutoff = 1/2.5;
 dtau = ((b-mu)/c)/(nump-1) * cutoff;
 tau = 0:dtau:(b-mu)/c *cutoff;
@@ -64,5 +64,5 @@ f_bif.tu = tu;
 %save('F_Bifurcation_tau.mat','f_bif');
 %%
 figure(3)
-plot(ts,s1,'*k',tu,u1,'.k',tu,u2,'.b',ts,s2,'*b',tu,u3,'.g',ts,s3,'*g',tu,u4,'.r',ts,s4,'*r','markersize',1);
+plot(ts,s1,'*k',tu,u1,'.k',tu,u2,'.b',ts,s2,'*b',tu,u3,'.g',ts,s3,'*g',tu,u4,'.r',ts,s4,'*r','markersize',10);
 legend('n1','n2','n3','n4')

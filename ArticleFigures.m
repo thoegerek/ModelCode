@@ -20,6 +20,7 @@ load('Pop_tau.mat')
 % load('AXAY.mat')
 % load('PiB_dimless.mat')
 load('Pha.mat');
+load('F_Bifurcation_tau.mat')
 % load('Hys.mat');
 
 % Color (and names) definitions
@@ -680,7 +681,21 @@ collapse = popt.TotPop; collapse(popt.prop>tol) = nan;
 hold on
 surf(popt.ay,popt.tau,collapse,popt.prop-.01,'edgecolor','none');
 view(45,55)
-colormap(customcolormap([0 .15 .3 .5 .99 1],{'#a0ffa0',rgb2hex(C.mig),'#208060',rgb2hex(C.nonmig+[-.1 .1 0]),rgb2hex(C.nonmig),rgb2hex(C.nonmig/2)}))
+
+colMIG = rgb2hsv(C.nonmig);
+colNONMIG = rgb2hsv(C.mig);
+
+colN = 500;
+colmap = zeros(colN,3); 
+for i = 1:3
+    colmap(:,i) = linspace(colMIG(i),colNONMIG(i),colN);
+end
+Colmap = hsv2rgb(colmap);
+colormap(Colmap)
+%colormap(customcolormap([0 .15 .3 .5 .99 1],{'#a0ffa0',rgb2hex(C.mig),'#208060',rgb2hex(C.nonmig+[-.1 .1 0]),rgb2hex(C.nonmig),rgb2hex(C.nonmig/2)}))
+
+
+
 c = colorbar;
 ylabel(c,'Migrating fraction of population','interpreter','latex')
 
@@ -770,56 +785,69 @@ set(findall(gcf,'-property','interpreter'),'interpreter','latex')
 %set(gcf,'Position',[550 350 700 500])
 % set(findall(gcf,'-property','FontSize'),'FontSize',12)
 % set(findall(gcf,'-property','interpreter'),'interpreter','latex')
-%% bifurcation of strat -dimless
-% figure
-% names{get(gcf,'number')} = 'Bif_strat_dimless';
-% 
-% axis;
-% hold on
-% for i = 1:size(pidi.stability,2)
-%     plot(pidi.d(pidi.stability(:,i)==1),pidi.eq(pidi.stability(:,i)==1,i),'m.')
-%     plot(pidi.d(pidi.stability(:,i)==-1),pidi.eq(pidi.stability(:,i)==-1,i),'k.')
-% end
-% xlim([0 max(pidi.d)])
-% xlabel('c \cdot b^{3} \cdot \lambda^{-2} \cdot d_{0}^{-1}');
-% ylabel('\sigma [b/\lambda]')
-% 
-% 
-% 
-% %% Hysteresis example
-% figure
-% names{get(gcf,'number')} = 'Hysteresis';
-% 
-% yyaxis left
-% plot(1:length(hys.D),hys.D,'k',1:length(hys.D),hys.tau,'--b')
-% yyaxis right
-% plot(1:length(hys.D),hys.eq)
-% xlabel('t [years]')
-% ylabel('Individuals \cdot 10^{3}')
-% legend('c','\sigma*','n_{0}','n_{1}')
-% 
-% %% One invasion
-% figure
-% names{get(gcf,'number')} = 'Invasion';
-% 
-% plot(inv.T,inv.X(:,1),inv.T,inv.X(:,2),inv.T,inv.X(:,3),':',inv.T,inv.X(:,4),':','linewidth',1.5);
-% set(gca,'colororder',[[0 0.4470 0.7410];[0.8500 0.3250 0.0980];[0 0.4470 0.7410];[0.8500 0.3250 0.0980]])
-% hold on
-% plot(inv.T,sum(inv.X,2),'k--','linewidth',1.5)
-% legend('n_{1} (\sigma = 1.25)','n_{2} (\sigma = 1.25)','m_{1} (\sigma = 0.95)','m_{2} (\sigma = 0.95)','Total population')
-% ylabel('Adult individuals')
-% xlabel('Time [years]')
+%% Bifurcation pop - 4 patches
+figure
+names{get(gcf,'number')} = 'MultipleMigrants';
 
-%set(gcf,'Position',[550 350 700 500])
-% set(findall(gcf,'-property','FontSize'),'FontSize',12)
-% set(findall(gcf,'-property','interpreter'),'interpreter','latex')
+[ts,ord] = sort(f_bif.ts(f_bif.s2  ~= 0));
+s2 = f_bif.s2(f_bif.s2 ~= 0);
+s2 = s2(ord);
+[~,ord] = sort(f_bif.ts(f_bif.s3  ~= 0));
+s3 = f_bif.s3(f_bif.s3 ~= 0);
+s3 = s3(ord);
+s4 = f_bif.s4(f_bif.s4 ~= 0);
+s4 = s4(ord);
+
+s02 = f_bif.s2(f_bif.s2 == 0);
+s03 = f_bif.s2(f_bif.s3 == 0);
+s04 = f_bif.s2(f_bif.s4 == 0);
+ts0 = f_bif.ts(f_bif.s2 == 0);
+
+[ts11,ord] = sort(f_bif.ts(f_bif.s1 < 600));
+s11 = f_bif.s1(f_bif.s1 < 600);
+s11 = s11(ord);
+s11 = s11(ts11<.45);
+ts11 = ts11(ts11<.45);
+
+[ts12a,ord] = sort(f_bif.ts(f_bif.s1 > 600));
+s12a = f_bif.s1(f_bif.s1 > 600);
+s12a = s12a(ord);
+s12a = s12a(ts12a<.45);
+ts12a = ts12a(ts12a<.45);
+
+[ts12b,ord] = sort(f_bif.ts);
+s12b = f_bif.s1(ord);
+s12b = s12b(ts12b>=.45);
+ts12b = ts12b(ts12b>=.45);
+
+ts12 = [ts12a,ts12b];
+s12 = [s12a;s12b];
+
+plt1 = plot(ts11,s11,'-',ts12,s12,'-',f_bif.tu,f_bif.u1,'.','markersize',2,'linewidth',3,'color',C.nonmig);
+hold on
+plt2 = plot(ts,s2,'-',ts0,s02+20,'-',f_bif.tu,f_bif.u2,'.','markersize',2,'linewidth',3,'color',C.mig);
+plt3 = plot(ts,s3,'-',ts0,s03+10,'-',f_bif.tu,f_bif.u3,'.','markersize',2,'linewidth',3,'color',C.bireg);
+plt4 = plot(ts,s4,'-',ts0,s04,'-',f_bif.tu,f_bif.u4,'.','markersize',2,'linewidth',3,'color',[.8 .6 0]);
+
+nothing = plot(nan,nan,'color',[0 0 0 0]);
+linedum = plot(nan,nan,'-k','linewidth', 3);
+dotdum = plot(nan,nan,'-k','linewidth', .5);
+legend([plt1(1) plt2(1) plt3(1) plt4(1),nothing,nothing,nothing,nothing,nothing,linedum,dotdum,nothing],{'Non-migrants ($n_{0}$)','Hab. 1 migrants ($n_1$)','Hab. 2 migrants ($n_2$)','Hab. 3 migrants ($n_3$)',...
+    '','','','','','Stable eq.','Sadle points',''},'location','northoutside','numcolumns',3)
+ylim([0 1250])
+xlabel('Sociality ($\sigma$)')
+ylabel('Population number')
+
+set(gcf,'Position',[550 350 700 500])
+set(findall(gcf,'-property','FontSize'),'FontSize',14)
+set(findall(gcf,'-property','interpreter'),'interpreter','latex')
 %% exporting
 
-% path = 'C:/Users/thekn/Pictures/Article1/';
-% 
-% for i = 1:length(names)
-%     if ishandle(i)
-%         figure(i)
-%         export_fig([path,names{i}],'-png','-transparent','-m5')
-%     end
-% end
+path = 'C:/Users/thekn/Pictures/Article1/';
+
+for i = 1:length(names)
+    if ishandle(i)
+        figure(i)
+        export_fig([path,names{i}],'-png','-transparent','-m5')
+    end
+end
