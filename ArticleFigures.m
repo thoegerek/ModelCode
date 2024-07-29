@@ -75,7 +75,7 @@ patch([inv.T5(1) inv.T5(1) inv.T5(end) inv.T5(end)],[0 ymax ymax 0],[.5 .5 .5],'
 
 xlim([0,Tcat(end)])
 ylim([ymin ymax])
-legend([plt(8),plt(9),plt(1)],{'Non-migrating population','Migrating population','Total population',...
+legend([plt(8),plt(9),plt(1)],{'Non-migrating contingent','Migrating contingent','Total population',...
     },'location','nw');
 xlabel('Time')
 ylabel('Population number')
@@ -103,14 +103,15 @@ seq = plot(0,0,'o',pip.eqs(end),pip.eqs(end),'o','color',C.stable,'markersize',1
 
 set(0,'defaulttextInterpreter','tex') 
 
-text(.33,.2,'$+(-)$','color','w')
+text(.35,.16,'$(-)$')
 
-text(.33,.5,'$-(+)$')
+text(.3225,.445,'$(+)$','color','w')
 text(.1095,.07,'$-$','fontsize',16)
 
-text(.185,.6,'$-$','fontsize',24)
-text(.185,.1,'$+$','color','w','fontsize',24)
-text(.8,.3,'$+$','color','w','fontsize',24)
+text(.135,.67,'$-$','fontsize',24)
+%text(.185,.1,'$+$','color','w','fontsize',24)
+%text(.475,.1,'$-$','fontsize',24)
+text(.8,.2,'$+$','color','w','fontsize',24)
 
 plot([.4 .6 .6 .8 .8 1],[.4 .4 .6 .6 .8 .8],'--','color',[.5 .5 .5],'linewidth',1.5);
 plot(.5,.4,'<','color',[.5 .5 .5],'markerfacecolor',[.5 .5 .5])
@@ -272,7 +273,7 @@ plot(php.Seperatrix(:,1),php.Seperatrix(:,2),'--k','linewidth',2)
 
 for i = 1:length(php.XT)
     for j = 1:length(php.XT)
-        plot(php.XT{i,j}(:,1),php.XT{i,j}(:,2),'-','Color',[0,0,0,.01])
+        plot(php.XT{i,j}(:,1),php.XT{i,j}(:,2),'-','Color',[0,0,0,.015])
     end
 end
 
@@ -284,11 +285,11 @@ quiver(php.X,php.Y,php.dx./sqrt(norms),php.dy./sqrt(norms),'linewidth',3, 'AutoS
 quiver(php.X,php.Y,php.dx./sqrt(norms),php.dy./sqrt(norms),'linewidth',1, 'AutoScaleFactor',1,'color',[.4 .4 .4])
 
 psta = plot(php.steqx,php.steqy,'o','color',C.stable,'markersize',10,'linewidth',2);
-pusta = plot(php.usteqx(1),php.usteqy(1),'o','color',C.unstable,'markersize',10,'linewidth',2);
+pusta = plot(php.usteqx(1),php.usteqy(1),'o','color',[.9 .5 .1],'markersize',10,'linewidth',2);
 psad = plot(php.usteqx(2),php.usteqy(2),'o','color',[.4 .4 .4],'markersize',10,'linewidth',2);
 xlabel('Non-migrant population ($n_{0}$)')
 ylabel('Migrant population ($n_{1}$)')
-legend([psta,psad,pusta,sols,manif,green,red],{'Stable eq.','Saddle point','Unstable eq.','Random trajectories','Attracting manifold'...
+legend([psta,psad,pusta,sols,manif,green,red],{'Stable eq.','Saddle point','Unstable eq.','Solution trajectories','Attracting manifold'...
     'Basin of upper eq.','Basin of lower eq.'},'location','ne')
 xlim([php.Xspan(1) php.Xspan(2)])
 ylim([php.Yspan(1)-.1 php.Yspan(2)+.1])
@@ -378,9 +379,9 @@ for i = 1:10
     Lgrid(:,i) = (i*.1)^2*pfb.D'.*pfb.X(:,1).*pfb.X(:,2).*(pfb.X(:,1)*pfb.data{1}-pfb.X(:,2)*pfb.data{2}); %works without the ^2 (?)
 end
 
-text(.0022,.562,'\textbf{I}')
-text(.0067,.56,'\textbf{II}')
-text(.0215,.562,'\textbf{III}')
+text(.097,.06,'\textbf{I}','horizontalalignment','center')
+text(.097,.13,'\textbf{II}','horizontalalignment','center')
+text(.097,.21,'\textbf{III}','horizontalalignment','center')
 
 helppoint(1) = min(pib.d(pib.stability(:,1)==1)); %mssing point leftmost on top due to num. inac.
 helppoint(2) = Luu(5)-(Luu(6)-Luu(5))*6;
@@ -396,7 +397,7 @@ plot([helppoint(1) bis.d(upper)],[helppoint(2);Luu(5:end)],'-','linewidth',1,'co
 %plot([pfb.D(1),min(bis.d(upper))],[Lul(1) Luu(5)],'-','linewidth',1,'color',C.unstable)
 plot(bis.d(pib.stability(:,2)==-1),Ls,'-','linewidth',1,'color',C.stable,'linewidth',1.5)
 
-text(.05,ymax,'Learning rate $(L_{0\rightarrow 1})$','HorizontalAlignment','center','Verticalalignment','bottom')
+text(.05,ymax,'Learning rate $(L_{01})$','HorizontalAlignment','center','Verticalalignment','bottom')
 % for i = 1:4
 %     plot([1 1]*(i)*.02,[0 4000],'color',[.15 .15 .15 .15])
 % end
@@ -407,8 +408,8 @@ patch([0 pfb.D(1) pfb.D(1) 0],[0 0 ymax ymax],[.15 .15 .15],'edgealpha',0,'facea
 ylim([0 ymax])
 
 text(.092,75,'\textbf{I}','horizontalalignment','center')
-text(.092,250,'\textbf{II}','horizontalalignment','center')
-text(.092,450,'\textbf{III}','horizontalalignment','center')
+text(.092,260,'\textbf{II}','horizontalalignment','center')
+text(.092,650,'\textbf{III}','horizontalalignment','center')
 
 
 set(gcf,'Position',[550 350 700 500])
@@ -685,12 +686,19 @@ view(45,55)
 colMIG = rgb2hsv(C.nonmig);
 colNONMIG = rgb2hsv(C.mig);
 
-colN = 500;
-colmap = zeros(colN,3); 
+colN1 = 40;
+colN2 = 60;
+inflection = .025;
+colmap = zeros(colN1+colN2,3); 
+colMIDPOINT = colMIG*(1-inflection)+colNONMIG*inflection;
 for i = 1:3
-    colmap(:,i) = linspace(colMIG(i),colNONMIG(i),colN);
+    colmap(1:colN1,i) = linspace(colMIG(i),colMIDPOINT(i),colN1);
+    colmap(colN1+1:end,i) = linspace(colMIDPOINT(i),colNONMIG(i),colN2);
 end
+colmap(:,2) = colmap(:,2)*.8;
+colmap(:,3) = colmap(:,3)*.9;
 Colmap = hsv2rgb(colmap);
+Colmap = [C.nonmig/2;Colmap];
 colormap(Colmap)
 %colormap(customcolormap([0 .15 .3 .5 .99 1],{'#a0ffa0',rgb2hex(C.mig),'#208060',rgb2hex(C.nonmig+[-.1 .1 0]),rgb2hex(C.nonmig),rgb2hex(C.nonmig/2)}))
 
@@ -742,9 +750,9 @@ ylab = ylabel('Sociality ($\sigma$)');
 %ylab.Rotation = atan(320/190)*180/(2*pi);
 %ylab.Position(1) = -0.03;
 %ylab.Position(2) = .3;
-zlabel('Total population number')
+zlabel('Total population size')
 
-legend([p1,p2],{'Chosen ssociality','Ideal sociality'},'location','ne')
+legend([p1,p2],{'Chosen sociality','Ideal sociality'},'location','ne')
 set(gca,'Xtick',[1 3 5 7 9]*1e-4)
 set(gca,'XTickLabel',{1 3 5 7 9})
 annotation('textbox',[.06 .32 0 0],'string','$\times 10^{-4}$')
@@ -803,42 +811,61 @@ s03 = f_bif.s2(f_bif.s3 == 0);
 s04 = f_bif.s2(f_bif.s4 == 0);
 ts0 = f_bif.ts(f_bif.s2 == 0);
 
-[ts11,ord] = sort(f_bif.ts(f_bif.s1 < 600));
-s11 = f_bif.s1(f_bif.s1 < 600);
+[ts11,ord] = sort(f_bif.ts(f_bif.s1 < 550));
+s11 = f_bif.s1(f_bif.s1 < 550);
 s11 = s11(ord);
-s11 = s11(ts11<.45);
-ts11 = ts11(ts11<.45);
+s11 = s11(ts11<f_bif.ub);
+ts11 = ts11(ts11<f_bif.ub);
 
-[ts12a,ord] = sort(f_bif.ts(f_bif.s1 > 600));
-s12a = f_bif.s1(f_bif.s1 > 600);
+[ts12a,ord] = sort(f_bif.ts(f_bif.s1 > 550));
+s12a = f_bif.s1(f_bif.s1 > 550);
 s12a = s12a(ord);
-s12a = s12a(ts12a<.45);
-ts12a = ts12a(ts12a<.45);
+s12a = s12a(ts12a<f_bif.ub);
+ts12a = ts12a(ts12a<f_bif.ub);
 
 [ts12b,ord] = sort(f_bif.ts);
 s12b = f_bif.s1(ord);
-s12b = s12b(ts12b>=.45);
-ts12b = ts12b(ts12b>=.45);
+s12b = s12b(ts12b>=f_bif.ub);
+ts12b = ts12b(ts12b>=f_bif.ub);
 
 ts12 = [ts12a,ts12b];
 s12 = [s12a;s12b];
 
-plt1 = plot(ts11,s11,'-',ts12,s12,'-',f_bif.tu,f_bif.u1,'.','markersize',2,'linewidth',3,'color',C.nonmig);
+ymax= max(f_bif.sr)*1.05;
+tiledlayout(3,3)
+nexttile([2,3])
+
+pltall = plot(f_bif.tau,f_bif.sr,'-.','linejoin','chamfer','linewidth',2,'color',C.mig);
 hold on
-plt2 = plot(ts,s2,'-',ts0,s02+20,'-',f_bif.tu,f_bif.u2,'.','markersize',2,'linewidth',3,'color',C.mig);
-plt3 = plot(ts,s3,'-',ts0,s03+10,'-',f_bif.tu,f_bif.u3,'.','markersize',2,'linewidth',3,'color',C.bireg);
-plt4 = plot(ts,s4,'-',ts0,s04,'-',f_bif.tu,f_bif.u4,'.','markersize',2,'linewidth',3,'color',[.8 .6 0]);
+plot([f_bif.ub,f_bif.ub],[0 ymax],'--k',[f_bif.lb,f_bif.lb],[0 ymax],'--k')
+plt1 = plot(ts11,s11,'-',ts12,s12,'-',f_bif.tu,f_bif.u1,'.','markersize',2,'linewidth',3,'color',C.nonmig);
+plt2 = plot(ts,s2,'-',ts0,s02+20,'-',f_bif.tu,f_bif.u2,'.','linejoin','chamfer','markersize',2,'linewidth',3,'color',[0    0.4470    0.7410]);
+plt3 = plot(ts,s3,'-',ts0,s03+10,'-',f_bif.tu,f_bif.u3,'.','linejoin','chamfer','markersize',2,'linewidth',3,'color',C.bireg);
+plt4 = plot(ts,s4,'-',ts0,s04,'-',f_bif.tu,f_bif.u4,'.','linejoin','chamfer','markersize',2,'linewidth',3,'color',[.8 .6 0]);
+
 
 nothing = plot(nan,nan,'color',[0 0 0 0]);
 linedum = plot(nan,nan,'-k','linewidth', 3);
 dotdum = plot(nan,nan,'-k','linewidth', .5);
-legend([plt1(1) plt2(1) plt3(1) plt4(1),nothing,nothing,nothing,nothing,nothing,linedum,dotdum,nothing],{'Non-migrants ($n_{0}$)','Hab. 1 migrants ($n_1$)','Hab. 2 migrants ($n_2$)','Hab. 3 migrants ($n_3$)',...
-    '','','','','','Stable eq.','Sadle points',''},'location','northoutside','numcolumns',3)
-ylim([0 1250])
-xlabel('Sociality ($\sigma$)')
+legend([plt1(1) plt2(1) plt3(1) plt4(1),nothing,nothing,nothing,nothing,pltall,nothing,linedum,dotdum],{'Non-migrants ($n_{0}$)','Hab. 1 migrants ($n_1$)','Hab. 2 migrants ($n_2$)','Hab. 3 migrants ($n_3$)',...
+    '','','','','All migrants','','Stable eq.','Sadle points'},'location','northoutside','numcolumns',3)
+ylim([0 ymax])
 ylabel('Population number')
 
-set(gcf,'Position',[550 350 700 500])
+nexttile([1,3])
+p1 = semilogy(f_bif.tau,f_bif.csum,'k','linewidth',1.5);
+hold on
+p2 = semilogy(f_bif.tau,f_bif.mls,'linewidth',1.5);
+set(gca,'ColorOrderIndex',1)
+p3 = semilogy(f_bif.tau,f_bif.thresh,'k--','linewidth',1.5);
+plot(nan,nan)
+plot([f_bif.lb,f_bif.ub],[331 169],'x','linewidth',2,'markersize',8)
+ylim([10 1e5])
+legend([p2 p1 p3],'$\frac{\mu}{c\sigma^2}$','$\sum_{i=0}^3 n_i^2d_i$','$n_0^2d_0$')
+
+xlabel('Sociality ($\sigma$)')
+
+set(gcf,'Position',[550 350 700 750])
 set(findall(gcf,'-property','FontSize'),'FontSize',14)
 set(findall(gcf,'-property','interpreter'),'interpreter','latex')
 %% exporting

@@ -1,6 +1,6 @@
-function out = linearisedInvader(SYMBOLIC)
-%The system ("mymodel") linearised for invaders around [xr* yr* 0 0]. Note
-%the internal formulation is wrong before linearisation.
+function out = linearisedInvaderComplete(SYMBOLIC)
+%The linearised system wherein the formulation of the invader fitness
+%equations are "correct". The resulting linearisation should be the same.
 %SYMBOLIC = if function returns symbolic or function handle; false
 
 syms xr yr xi yi ax ay b c d taur taui
@@ -10,9 +10,10 @@ fx = b - ax*(xr+xi) - mu - c*taui;
 fy = b - ay*(yr+yi) - mu - c*taui;
 
 D = d*taui*xi*(taur*yr + taui*yi);
+Dback = d*taui*yi*(taur*xr + taui*xi);
 
-dx = xi*fx + (fy + mu)*yi + D*(fx-fy);
-dy = -yi*mu + D*(fy-fx); %The learning rate needs an additional term, but this should work in the limit xi,yi << 1
+dx = xi*fx + (fy + mu)*yi - piecewise(fy<fx,Dback*(fy-fx),fy>=fx,D*(fy-fx));
+dy = -yi*mu + piecewise(fy<fx,Dback*(fy-fx),fy>=fx,D*(fy-fx));
 
 dxdx = diff(dx,xi);
 dxdy = diff(dx,yi);

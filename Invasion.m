@@ -1,13 +1,3 @@
-% ax = .02;
-% ay = .015;
-% b = 1;
-% c = 1;
-% d = 1;
-% mu = .24;
-
-% taur = .2;
-% taui = .1;
-
 ax = .001;
 ay = .0003;
 b = 1;
@@ -48,8 +38,8 @@ X06 = [X5(end,1)+X5(end,3);X5(end,2)+X5(end,4); 0 ; 0];
 [T6,X6] = ode15s(@myModelInvader,[0 150],X06,[],ax,ay,b,c,d,mu,tau4,0);
 T6 = T6+T5(end);
 
-Tcat = [T1;T2;T3;T4;T5;T6];
-Xcat = [X1;X2;X3;X4;X5;X6];
+Tcat = [T0-150;T1;T2;T3;T4;T5;T6];
+Xcat = [X0;X1;X2;X3;X4;X5;X6];
 %%
 inv.data = {ax,ay,b,c,d,mu,mubad};
 inv.dataDesc = {'ax','ay','b','c','d','mu','mubad'};
@@ -66,7 +56,7 @@ inv.X3 = X3;
 inv.X4 = X4;
 inv.X5 = X5;
 inv.X6 = X6;
-%save('Invasion.mat','inv');
+save('Invasion.mat','inv');
 %%
 figure(1)
 ymax = 2000;
@@ -106,8 +96,10 @@ lines = findobj(gca,'Type','line');
 for i = 1:length(lines)
     lines(i).LineStyle = styles(length(styles)-i+1);
 end
-
-xlim([0,Tcat(end)])
+hold on
+plot(T0-150,X0(:,4),'linewidth',1.5,'color',[0.9290 0.6940 0.1250])
+plot(T0-150,X0(:,3),'linewidth',1.5,'color',[0.4660 0.6740 0.1880])
+xlim([-150,Tcat(end)])
 ylim([.5 ymax])
 legend([plt(1),plt(2),plt(end)],{'Non-migrating population','Migrating population','Total population'},'location','ne')
 xlabel('Time (years)')

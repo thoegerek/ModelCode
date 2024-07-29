@@ -8,13 +8,18 @@ fyr = b - ay*(yr+yi) - c*taur - mu;
 fxi = b - ax*(xr+xi) - c*taui - mu;
 fyi = b - ay*(yr+yi) - c*taui - mu;
 
-Dr = d*taur*xr*(yr*taur + yi*taui);
-Di = d*taui*xi*(yr*taur + yi*taui);
+Dxr = d*taur*xr*(yr*taur + yi*taui);
+Dxi = d*taui*xi*(yr*taur + yi*taui);
+Dyr = d*taur*yr*(xr*taur + xi*taui);
+Dyi = d*taui*yi*(xr*taur + xi*taui);
 
-dxr = fxr*xr + max(0,(fyr + mu)*yr) + Dr*(fxr-fyr);
-dyr = -mu*yr + Dr*(fyr-fxr); 
-dxi = fxi*xi + max(0,(fyi + mu)*yi) + Di*(fxi-fyi);
-dyi = -mu*yi + Di*(fyi-fxi);
+Lr = max(0,Dxr*(fyr-fxr)) - max(0,Dyr*(fxr-fyr));
+Li = max(0,Dxi*(fyi-fxi)) - max(0,Dyi*(fxi-fyi));
+
+dxr = fxr*xr + max(0,(fyr + mu)*yr) - Lr;
+dyr = -mu*yr + Lr; 
+dxi = fxi*xi + max(0,(fyi + mu)*yi) - Li;
+dyi = -mu*yi + Li;
 
 
 dX = [dxr;dyr;dxi;dyi];
