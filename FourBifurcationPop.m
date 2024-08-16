@@ -84,7 +84,7 @@ f_bif.sr = max2+max3+max4;
 f_bif.mls = mls;
 f_bif.csum = csum;
 f_bif.thresh = (b-mu-c*tau).^2/a1;
-save('F_Bifurcation_tau.mat','f_bif');
+%save('F_Bifurcation_tau.mat','f_bif');
 
 %%
 figure(3)

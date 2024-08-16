@@ -157,6 +157,12 @@ text(.014,.75,'$\lambda\downarrow$')
 
 
 set(gcf,'Position',[680          91         713        1007])
+
+annotation('textbox',[0.14,0.89,0,0],'string','$\textbf{(a)}$')
+annotation('textbox',[0.2,0.3,0,0],'string','$\textbf{(b)}$')
+annotation('textbox',[0.485,0.3,0,0],'string','$\textbf{(c)}$')
+annotation('textbox',[0.77,0.3,0,0],'string','$\textbf{(d)}$')
+
 set(findall(gcf,'-property','FontSize'),'FontSize',16)
 set(findall(gcf,'-property','interpreter'),'interpreter','latex')
 %% Bifurcation in population eq.
@@ -243,7 +249,7 @@ colororder([
 dummy = plot(nan,nan,'k-',nan,nan,'k--');
 nothing = plot(nan,'color',[0 0 0 0]);
 
-lgd = legend([plt(5),plt(2),dummy(1),dummy(2)],{'Non-migrants','Migrants','Stable eq.','Saddle points'},'location','nw');
+lgd = legend([plt(5),plt(2),dummy(1),dummy(2)],{'Non-migrants','Migrants','Stable eq.','Saddle points'},'location','ne');
 lgd.NumColumns = 2;
 
 text(.02,1100,'\textbf{I}')
@@ -256,6 +262,9 @@ xlabel('Sociality ($\sigma$)')
 ylabel('Population number')
 
 set(gcf,'Position',[550 350 700 500])
+
+annotation('textbox',[0.13,0.92,0,0],'string','$\textbf{(b)}$')
+
 set(findall(gcf,'-property','FontSize'),'FontSize',16)
 set(findall(gcf,'-property','interpreter'),'interpreter','latex')
 %% Phase Pop
@@ -293,6 +302,9 @@ xlim([php.Xspan(1) php.Xspan(2)])
 ylim([php.Yspan(1)-.1 php.Yspan(2)+.1])
 
 set(gcf,'Position',[550 350 700 500])
+
+annotation('textbox',[0.13,0.92,0,0],'string','$\textbf{(a)}$')
+
 set(findall(gcf,'-property','FontSize'),'FontSize',16)
 set(findall(gcf,'-property','interpreter'),'interpreter','latex')
 %% Bifurcation in strategy
@@ -564,6 +576,15 @@ ylim([0 ymaxsoc]);
 ylabel('Critical sociality fraction')
 
 set(gcf,'Position',[350 150 1200 800])
+
+annotation('textbox',[0.11,0.84,0,0],'string','$\textbf{(a)}$')
+annotation('textbox',[0.404,0.84,0,0],'string','$\textbf{(b)}$')
+annotation('textbox',[0.698,0.84,0,0],'string','$\textbf{(c)}$')
+
+annotation('textbox',[0.285,0.285,0,0],'string','$\textbf{(d)}$')
+annotation('textbox',[0.579,0.285,0,0],'string','$\textbf{(e)}$')
+annotation('textbox',[0.873,0.285,0,0],'string','$\textbf{(f)}$')
+
 set(findall(gcf,'-property','FontSize'),'FontSize',16)
 set(findall(gcf,'-property','interpreter'),'interpreter','latex')
 %% Phase plot of critical values in strat
@@ -665,6 +686,9 @@ ylabel('Migrating fraction of population')
 legend([ plt1 plt2 chos opt pat],{'Population eq.','Lower equilibrium','Chosen sociality','Ideal sociality','Bi-stable region'},'location','se')
 
 set(gcf,'Position',[550 350 700 500])
+
+annotation('textbox',[0.13,0.92,0,0],'string','$\textbf{(a)}$')
+
 set(findall(gcf,'-property','FontSize'),'FontSize',17)
 set(findall(gcf,'-property','interpreter'),'interpreter','latex')
 %% Population for varied ay and tau
@@ -753,6 +777,9 @@ annotation('textbox',[.06 .32 0 0],'string','$\times 10^{-4}$')
 set(gca,'Ztick',[0 2500 5000])
 
 set(gcf,'Position',[550 350 700 500])
+
+annotation('textbox',[0.13,0.92,0,0],'string','$\textbf{(b)}$')
+
 set(findall(gcf,'-property','FontSize'),'FontSize',17)
 set(findall(gcf,'-property','interpreter'),'interpreter','latex')
 %% pop varying ax and ay
@@ -867,17 +894,21 @@ lgd = legend([p2 p1 p3],'$\frac{\mu}{c\sigma^2}$','$\sum_{i=0}^3 n_i^2d_i$','$n_
 xlabel('Sociality ($\sigma$)')
 
 set(gcf,'Position',[550 350 700 750])
+
+annotation('textbox',[0.125,0.83,0,0],'string','$\textbf{(a)}$')
+annotation('textbox',[0.155,0.302,0,0],'string','$\textbf{(b)}$')
+
 set(findall(gcf,'-property','FontSize'),'FontSize',14)
 set(findall(gcf,'-property','interpreter'),'interpreter','latex')
 lgd.Position(1) = lgd.Position(1)+.01;
 lgd.Position(2) = lgd.Position(2)+.01;
 %% exporting
 
-% path = 'C:/Users/thekn/Pictures/Article1/';
-% 
-% for i = 1:length(names)
-%     if ishandle(i)
-%         figure(i)
-%         export_fig([path,names{i}],'-png','-transparent','-m5')
-%     end
-% end
+path = 'C:/Users/thekn/Pictures/Article1/Ecology format/';
+
+for i = 1:length(names)
+    if ishandle(i)
+        figure(i)
+        export_fig([path,names{i}],'-jpg','-transparent','-m5')
+    end
+end
