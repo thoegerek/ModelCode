@@ -234,12 +234,12 @@ hold on
 
 plt = plot(tustay,ustay,'--',tstay1,stay1,tstay2,stay2,tustax,ustax,'--',tstax1,stax1,tstax2,stax2,'linewidth',1.5);
 colororder([
-    C.nonmig;
-    C.nonmig;
-    C.nonmig;
     C.mig;
     C.mig;
-    C.mig]);
+    C.mig;
+    C.nonmig;
+    C.nonmig;
+    C.nonmig]);
 dummy = plot(nan,nan,'k-',nan,nan,'k--');
 nothing = plot(nan,'color',[0 0 0 0]);
 
@@ -829,9 +829,11 @@ ymax= max(f_bif.sr)*1.05;
 tiledlayout(3,3)
 nexttile([2,3])
 
-pltall = plot(f_bif.tau,f_bif.sr,'-.','linejoin','chamfer','linewidth',2,'color',C.mig);
+pat = patch([min(bitau) min(bitau) max(bitau) max(bitau)],[1e-3 1e6  1e6 1e-3],C.bireg);
 hold on
-plot([f_bif.ub,f_bif.ub],[0 ymax],'--k',[f_bif.lb,f_bif.lb],[0 ymax],'--k')
+pat.EdgeColor = C.bireg;
+pat.FaceAlpha = 0.2;
+pltall = plot(f_bif.tau,f_bif.sr,'-.','linejoin','chamfer','linewidth',2,'color',C.mig);
 plt1 = plot(ts11,s11,'-',ts12,s12,'-',f_bif.tu,f_bif.u1,'.','markersize',2,'linewidth',3,'color',C.nonmig);
 plt2 = plot(ts,s2,'-',ts0,s02+20,'-',f_bif.tu,f_bif.u2,'.','linejoin','chamfer','markersize',2,'linewidth',3,'color',[0    0.4470    0.7410]);
 plt3 = plot(ts,s3,'-',ts0,s03+10,'-',f_bif.tu,f_bif.u3,'.','linejoin','chamfer','markersize',2,'linewidth',3,'color',C.bireg);
@@ -851,20 +853,24 @@ ylim([0 ymax])
 ylabel('Population number')
 
 nexttile([1,3])
-p1 = semilogy(f_bif.tau,f_bif.csum,'k','linewidth',1.5);
+semilogy(nan,nan)
+pat = patch([min(bitau) min(bitau) max(bitau) max(bitau)],[1e-3 1e6  1e6 1e-3],C.bireg);
+pat.EdgeColor = C.bireg;
+pat.FaceAlpha = 0.2;
 hold on
-p2 = semilogy(f_bif.tau,f_bif.mls,'linewidth',1.5);
-set(gca,'ColorOrderIndex',1)
+p1 = semilogy(f_bif.tau,f_bif.csum,'k','linewidth',1.5);
+p2 = semilogy(f_bif.tau,f_bif.mls,'color',[0.8500    0.3250    0.0980],'linewidth',1.5);
 p3 = semilogy(f_bif.tau,f_bif.thresh,'k--','linewidth',1.5);
 plot(nan,nan)
-plot([f_bif.lb,f_bif.ub],[331 169],'x','linewidth',2,'markersize',8)
+plot([f_bif.lb,f_bif.ub],[331 169],'x','linewidth',2,'markersize',8,'color',[0.8500    0.3250    0.0980])
 ylim([10 1e5])
 yticks(10.^(1:2:5))
-lgd = legend([p2 p1 p3],'$\frac{\mu}{c\sigma^2}$','$\sum_{i=0}^3 n_i^2d_i$','$n_0^2d_0$');
-
+lgd = legend([p2 p1 p3],'$\frac{\mu}{\varepsilon\sigma^2}$','$\sum_{i=0}^3 n_i^2d_i$','$n_0^2d_0$');
 
 
 xlabel('Sociality ($\sigma$)')
+ylabel('Population per time')
+
 
 set(gcf,'Position',[550 350 700 750])
 set(findall(gcf,'-property','FontSize'),'FontSize',14)

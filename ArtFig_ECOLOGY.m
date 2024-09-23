@@ -240,12 +240,12 @@ hold on
 
 plt = plot(tustay,ustay,'--',tstay1,stay1,tstay2,stay2,tustax,ustax,'--',tstax1,stax1,tstax2,stax2,'linewidth',1.5);
 colororder([
-    C.nonmig;
-    C.nonmig;
-    C.nonmig;
     C.mig;
     C.mig;
-    C.mig]);
+    C.mig;
+    C.nonmig;
+    C.nonmig;
+    C.nonmig]);
 dummy = plot(nan,nan,'k-',nan,nan,'k--');
 nothing = plot(nan,'color',[0 0 0 0]);
 
@@ -904,11 +904,11 @@ lgd.Position(1) = lgd.Position(1)+.01;
 lgd.Position(2) = lgd.Position(2)+.01;
 %% exporting
 
-path = 'C:/Users/thekn/Pictures/Article1/Ecology format/';
-
-for i = 1:length(names)
-    if ishandle(i)
-        figure(i)
-        export_fig([path,names{i}],'-jpg','-transparent','-m5')
-    end
-end
+% path = 'C:/Users/thekn/Pictures/Article1/Ecology format/';
+% 
+% for i = 1:length(names)
+%     if ishandle(i)
+%         figure(i)
+%         export_fig([path,names{i}],'-jpg','-transparent','-m5')
+%     end
+% end
