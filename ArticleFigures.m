@@ -825,11 +825,15 @@ ts12b = ts12b(ts12b>=f_bif.ub);
 ts12 = [ts12a,ts12b];
 s12 = [s12a;s12b];
 
+
+[a1,a2,a3,a4,b,c,d,mu] = f_bif.data{:};
+ub = -(-b*d + d*mu + sqrt(b^2*d^2 - 2*b*d^2*mu + d^2*mu^2 - 4*c*d*sqrt(d*mu*a1)))/(2*c*d);
+
 ymax= max(f_bif.sr)*1.05;
 tiledlayout(3,3)
 nexttile([2,3])
 
-pat = patch([min(bitau) min(bitau) max(bitau) max(bitau)],[1e-3 1e6  1e6 1e-3],C.bireg);
+pat = patch([f_bif.lb f_bif.lb ub ub],[1e-3 1e6  1e6 1e-3],C.bireg);
 hold on
 pat.EdgeColor = C.bireg;
 pat.FaceAlpha = 0.2;
@@ -854,7 +858,7 @@ ylabel('Population number')
 
 nexttile([1,3])
 semilogy(nan,nan)
-pat = patch([min(bitau) min(bitau) max(bitau) max(bitau)],[1e-3 1e6  1e6 1e-3],C.bireg);
+pat = patch([f_bif.lb f_bif.lb ub ub],[1e-3 1e6  1e6 1e-3],C.bireg);
 pat.EdgeColor = C.bireg;
 pat.FaceAlpha = 0.2;
 hold on

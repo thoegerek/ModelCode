@@ -5,6 +5,7 @@ c = .2;
 d = .015;
 mu = .5;
 tau = .35; 
+
 %%
 
 [eqx,eqy,st] =equilibriumsStability(ax,ay,b,c,d,mu,tau,true);
@@ -127,9 +128,7 @@ for i = 1:num2
     end
 end
 
-sols = plot(nan,nan,'color',[.5 .5 .5]);%plot(A1(:,1),A1(:,2),'-k');
-%plot(A2(:,1),A2(:,2),'-k')
-%plot(A3(:,1),A3(:,2),'-k')
+sols = plot(nan,nan,'color',[.5 .5 .5]);
 
 quiver(X,Y,dx,dy,'linewidth',1.5, 'AutoScaleFactor',0.5)
 
