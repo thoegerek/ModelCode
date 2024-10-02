@@ -9,7 +9,6 @@ ay = .0003;
 b = 1;
 c = .2;
 mu = .5;
-
 %%
 X = zeros(length(D),2);
 xc = zeros(length(D),1);
@@ -111,8 +110,8 @@ Mu = pibmu.mu;
 Mu(Tau == inf) = [];
 Tau(Tau == inf) = [];
 %%
-ax = 10e-4;
-ay = 3e-4;
+ax = .001;
+ay = .0003;
 b = 1;
 c = .2;
 d = 0.015;
