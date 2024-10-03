@@ -1,6 +1,6 @@
 Code here used to generate "Knudsen et al. n.d. Migration through social learning and consequences for population dynamics and evolutionary stability" (unpublished)
 
-To made more easily accessible and usable after submission.
+To be made more easily accessible and usable after submission.
 
 
 
