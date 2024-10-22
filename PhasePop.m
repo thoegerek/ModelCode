@@ -3,8 +3,9 @@ ay = .0003;
 b = 1;
 c = .2;
 d = .015;
-mu = .5;
-tau = .35; 
+mu = .55;
+%tau = .35; 
+tau = .4;
 
 %%
 
@@ -43,12 +44,12 @@ end
 %% Solutions to define basins of attraction
 Trange = (0:.01:20).^2;
 
-num1 = 1500;
+num1 = 1000;
 
 X0 = [Xspan(1)*ones(1,num1),Xspan(2)*ones(1,num1)];
 Y0 = repmat(linspace(Yspan(1),Yspan(2)+1,num1),1,2);
 C = inf*ones(num1*2,1);
-tol = 1e-0;
+tol = 1e1;
 for i = 1:num1*2
     [~,Xt] = ode45(@myModel,Trange,[X0(i);Y0(i)],[],ax,ay,b,c,d,mu,tau);
     for j = 1:length(steqx)

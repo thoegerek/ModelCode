@@ -6,7 +6,7 @@ load('PIP.mat')
 load('PIP2.mat')
 load('PIP3.mat')
 load('PIP4.mat')
-load('Bifurcation_tau.mat')
+load('Bifurcation_mu.mat')
 load('PhasePop.mat')
 load('PiB_d.mat')
 load('PiB_ay.mat')
@@ -172,27 +172,34 @@ tstax1a = tstax(tstax < .3);
 stax0 = stax(logical((tstax >= .3 ).* (tstax <= .5)));
 tstax0 = tstax(logical((tstax >= .3 ).* (tstax <= .5)));
 %stax1b
-tstax2a = tstax0(stax0 > 550);
-stax2a = stax0(stax0 > 550);
-[tstax2a,ord] = sort(tstax2a);
-stax2a = stax2a(ord);
+% tstax2a = tstax0(stax0 > 550);
+% stax2a = stax0(stax0 > 550);
+% [tstax2a,ord] = sort(tstax2a);
+% stax2a = stax2a(ord);
+% 
+% %stax2a
+% tstax1b = tstax0(stax0 <= 550);
+% stax1b = stax0(stax0 <= 550);
+% 
+% %stax2b
+% stax2b = stax(tstax > .5);
+% tstax2b = tstax(tstax > .5);
+% 
+% stax1 = [stax1a;stax1b];
+% tstax1 = [tstax1a,tstax1b];
+% stax2 = [stax2a;flip(stax2b)];
+% tstax2 = [tstax2a,flip(tstax2b)];
 
-%stax2a
-tstax1b = tstax0(stax0 <= 550);
-stax1b = stax0(stax0 <= 550);
+stax1 = stax(stax>520);
+tstax1 = tstax(stax>520);
 
-%stax2b
-stax2b = stax(tstax > .5);
-tstax2b = tstax(tstax > .5);
-
-stax1 = [stax1a;stax1b];
-tstax1 = [tstax1a,tstax1b];
-stax2 = [stax2a;flip(stax2b)];
-tstax2 = [tstax2a,flip(tstax2b)];
+stax2 = stax(stax<=520);
+tstax2 = tstax(stax<=520);
 
 %ustax
 [ustax,ord] = sort(bif.ux);
-tustax = bif.tux(ord);
+[tustax,ord] = sort(bif.tux(ord));
+ustax = ustax(ord);
 tustax = tustax(ustax>0);
 ustax = ustax(ustax>0);
 
@@ -217,11 +224,11 @@ ustay = ustay(ustay>0);
 tustay = [max(tustax),tustay(end),tustay];
 ustay = [0;0;ustay];
 
-ymax = 1400;
-ymin = 0; % maybe -1?
+ymax = 1600;
+ymin = -5; % maybe -1?
 
 
-pat = patch([min(tustay) min(tustay) max(bif.tsy(bif.sy==0)) max(bif.tsy(bif.sy==0))],[ymin-1 ymax*1.1  ymax*1.1 ymin-1],C.bireg);
+pat = patch([min(tustay) min(tustay) max(bif.tsy(bif.sy~=0)) max(bif.tsy(bif.sy~=0))],[ymin-10 ymax*1.1  ymax*1.1 ymin-10],C.bireg);
 pat.EdgeColor = C.bireg;
 pat.FaceAlpha = 0.2;
 hold on
@@ -243,16 +250,16 @@ colororder([
 dummy = plot(nan,nan,'k-',nan,nan,'k--');
 nothing = plot(nan,'color',[0 0 0 0]);
 
-lgd = legend([plt(5),plt(2),dummy(1),dummy(2)],{'Non-migrants','Migrants','Stable eq.','Saddle points'},'location','nw');
+lgd = legend([plt(5),plt(2),dummy(1),dummy(2)],{'Non-migrants','Migrants','Stable eq.','Saddle points'},'location','ne');
 lgd.NumColumns = 2;
 
-text(.02,1100,'\textbf{I}')
-text(.365,1100,'\textbf{II}')
-text(.935,1100,'\textbf{III}')
+text(.4376,1450,'\textbf{I}','HorizontalAlignment', 'center')
+text(.5150,1225,'\textbf{II}','HorizontalAlignment', 'center')
+text(.5775,1225,'\textbf{III}','HorizontalAlignment', 'center')
 
-xlim([bif.tau(1) bif.tau(end)])
+xlim([bif.mu(1) bif.mu(end)])
 ylim([ymin ymax])
-xlabel('Sociality ($\sigma$)')
+xlabel('Mortality rate ($\mu$)')
 ylabel('Population number')
 
 set(gcf,'Position',[550 350 700 500])
@@ -543,7 +550,7 @@ plot([0 1],carry_mu,'color',[0 0 0],'linewidth',1.5)
 %plot([pfb.data{5} pfb.data{5}],[0,ymax],'k')
 text(.625,ymax,[strcat('$\varepsilon$ = ',num2str(pfbmu.data{4}));strcat("$\delta_1$ = ",num2str(pfbmu.data{2}))],'HorizontalAlignment', 'right','Verticalalignment','top');
 ylim([0 ymax])
-xlim([.4 .625])
+xlim([.4 .6])
 xlabel('Mortality rate ($\mu$)')
 annotation('textbox',[0.575,0.098,0,0],'string','$\times 10^{-4}$')
 
@@ -554,7 +561,7 @@ plot([.4 Bi_mu(1) Bi_mu Bi_mu(end) 1],[1;1;1-ploss_mu(:,1);0;0],'color',C.nonmig
 hold on
 plot([.4 Bi_mu(1) Bi_mu Bi_mu(end) 1],[1;1;1-ploss_mu(:,2);0;0],'color',C.mig,'linewidth',1.5)
 ylim([0 1])
-xlim([.4 .625])
+xlim([.4 .6])
 xlabel('Mortality rate ($\mu$)')
 set(gca,'ColorOrderIndex',1);
 colororder(C.stable);
@@ -883,11 +890,11 @@ lgd.Position(1) = lgd.Position(1)+.01;
 lgd.Position(2) = lgd.Position(2)+.01;
 %% exporting
 
-% path = 'C:/Users/thekn/Pictures/Article1/';
-% 
-% for i = 1:length(names)
-%     if ishandle(i)
-%         figure(i)
-%         export_fig([path,names{i}],'-png','-transparent','-m5')
-%     end
-% end
+path = 'C:/Users/thekn/Pictures/Article1/';
+
+for i = 1:length(names)
+    if ishandle(i)
+        figure(i)
+        export_fig([path,names{i}],'-png','-transparent','-m5')
+    end
+end
