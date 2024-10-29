@@ -3,7 +3,7 @@ ay = .0003;
 b = 1;
 c = .2;
 d = .015;
-mu = .55;
+mu = .5;
 %tau = .35; 
 tau = .4;
 
@@ -15,8 +15,8 @@ steqy = eqy(st==-1);
 usteqx = eqx(st~=-1);
 usteqy = eqy(st~=-1);
 
-Xspan = [0 3*max(steqx)];
-Yspan = [0 3*max(steqy)];
+Xspan = [0 1.5*max(steqx)];
+Yspan = [0 1.5*max(steqy)];
 
 %% Arrows
 X = linspace(Xspan(1),Xspan(2),11);
@@ -42,12 +42,12 @@ for i = 1:nump1
 end
 
 %% Solutions to define basins of attraction
-Trange = (0:.01:20).^2;
+Trange = (0:.01:40).^2;
 
-num1 = 1000;
+num1 = 5000;
 
 X0 = [Xspan(1)*ones(1,num1),Xspan(2)*ones(1,num1)];
-Y0 = repmat(linspace(Yspan(1),Yspan(2)+1,num1),1,2);
+Y0 = repmat(Yspan(2)*(linspace(Yspan(1),Yspan(2),num1)/Yspan(2)).^4,1,2);
 C = inf*ones(num1*2,1);
 tol = 1e1;
 for i = 1:num1*2
@@ -75,7 +75,7 @@ end
 
 %% Find the Seperatrix between the two basins
 Saddle = [usteqx(usteqx~=0);usteqy(usteqy~=0)];
-Sepind = find(diff(C)==1);
+Sepind = find(-diff(C)==1);
 if length(Sepind) == 2
     SepY = (Y0(Sepind)+Y0(Sepind+1))/2;
     SepX = X0(Sepind);

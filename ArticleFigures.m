@@ -78,7 +78,7 @@ ylim([ymin ymax])
 legend([plt(8),plt(9),plt(1)],{'Non-migrating contingent','Migrating contingent','Total population',...
     },'location','nw');
 xlabel('Time')
-ylabel('Population number')
+ylabel('Population size')
 
 
 set(gcf,'Position',[550 350 825 575])
@@ -233,6 +233,7 @@ pat.EdgeColor = C.bireg;
 pat.FaceAlpha = 0.2;
 hold on
 
+plot([.5 .5],[ymin ymax],'k','linewidth',2)
 % saddlex1 = [min(tustax) (max(ustax)+min(stax2a))/2];
 % saddley1 = [min(tustay) (max(ustay)+min(stay2))/2];
 % saddlex2 = [max(tstax1)+(tau(2)-tau(1)) min(stax1)];
@@ -262,6 +263,8 @@ ylim([ymin ymax])
 xlabel('Mortality rate ($\mu$)')
 ylabel('Population number')
 
+annotation('textbox',[0.13,0.92,0,0],'string','$\textbf{(b)}$')
+
 set(gcf,'Position',[550 350 700 500])
 set(findall(gcf,'-property','FontSize'),'FontSize',16)
 set(findall(gcf,'-property','interpreter'),'interpreter','latex')
@@ -286,18 +289,20 @@ sols = plot(nan,nan,'color',[.5 .5 .5]);
 manif = plot(nan,nan,'k','linewidth',1.5);
 
 norms = sqrt(php.dx.^2+php.dy.^2);
-quiver(php.X,php.Y,php.dx./sqrt(norms),php.dy./sqrt(norms),'linewidth',3, 'AutoScaleFactor',1,'color',[.9 .9 .9])
-quiver(php.X,php.Y,php.dx./sqrt(norms),php.dy./sqrt(norms),'linewidth',1, 'AutoScaleFactor',1,'color',[.4 .4 .4])
+quiver(php.X,php.Y,php.dx./sqrt(norms),php.dy./sqrt(norms),'linewidth',3, 'AutoScaleFactor',.55,'color',[.9 .9 .9])
+quiver(php.X,php.Y,php.dx./sqrt(norms),php.dy./sqrt(norms),'linewidth',1, 'AutoScaleFactor',.55,'color',[.4 .4 .4])
 
 psta = plot(php.steqx,php.steqy,'o','color',C.stable,'markersize',10,'linewidth',2);
-pusta = plot(php.usteqx(1),php.usteqy(1),'o','color',[.9 .5 .1],'markersize',10,'linewidth',2);
-psad = plot(php.usteqx(2),php.usteqy(2),'o','color',[.4 .4 .4],'markersize',10,'linewidth',2);
+pusta = plot(php.usteqx(2),php.usteqy(2),'o','color',[.9 .5 .1],'markersize',10,'linewidth',2);
+psad = plot(php.usteqx(1),php.usteqy(1),'o','color',[.4 .4 .4],'markersize',10,'linewidth',2);
 xlabel('Non-migrant population ($n_{0}$)')
 ylabel('Migrant population ($n_{1}$)')
-legend([psta,psad,pusta,sols,manif,green,red],{'Stable eq.','Saddle point','Unstable eq.','Solution trajectories','Attracting manifold'...
-    'Basin of upper eq.','Basin of lower eq.'},'location','ne')
+legend([psta,psad,pusta,sols,manif,green,red],{'Stable equilibria','Saddle point','Unstable eq.','Solution trajectories','Attracting manifold'...
+    'Basin of upper eq.','Basin of lower eq.'},'location','nw')
 xlim([php.Xspan(1) php.Xspan(2)])
 ylim([php.Yspan(1)-.1 php.Yspan(2)+.1])
+
+annotation('textbox',[0.85,0.92,0,0],'string','$\textbf{(a)}$')
 
 set(gcf,'Position',[550 350 700 500])
 set(findall(gcf,'-property','FontSize'),'FontSize',16)
@@ -570,6 +575,14 @@ plot(pibmu.mu,(pibmu.eq(:,2)-pibmu.eq(:,1))./pibmu.eq(:,2),':','linewidth',1.5)
 ylim([0 ymaxsoc]);
 ylabel('Critical sociality fraction')
 
+annotation('textbox',[0.11,0.84,0,0],'string','$\textbf{(a)}$')
+annotation('textbox',[0.404,0.84,0,0],'string','$\textbf{(b)}$')
+annotation('textbox',[0.698,0.84,0,0],'string','$\textbf{(c)}$')
+
+annotation('textbox',[0.285,0.285,0,0],'string','$\textbf{(d)}$')
+annotation('textbox',[0.579,0.285,0,0],'string','$\textbf{(e)}$')
+annotation('textbox',[0.873,0.285,0,0],'string','$\textbf{(f)}$')
+
 set(gcf,'Position',[350 150 1200 800])
 set(findall(gcf,'-property','FontSize'),'FontSize',16)
 set(findall(gcf,'-property','interpreter'),'interpreter','latex')
@@ -671,6 +684,8 @@ ylabel('Migrating fraction of population')
 %ylabel('Migrating fraction of population')
 legend([ plt1 plt2 chos opt pat],{'Population eq.','Lower equilibrium','Chosen sociality','Ideal sociality','Bi-stable region'},'location','se')
 
+annotation('textbox',[0.13,0.92,0,0],'string','$\textbf{(a)}$')
+
 set(gcf,'Position',[550 350 700 500])
 set(findall(gcf,'-property','FontSize'),'FontSize',17)
 set(findall(gcf,'-property','interpreter'),'interpreter','latex')
@@ -758,6 +773,8 @@ set(gca,'Xtick',[1 3 5 7 9]*1e-4)
 set(gca,'XTickLabel',{1 3 5 7 9})
 annotation('textbox',[.06 .32 0 0],'string','$\times 10^{-4}$')
 set(gca,'Ztick',[0 2500 5000])
+
+annotation('textbox',[0.13,0.92,0,0],'string','$\textbf{(b)}$')
 
 set(gcf,'Position',[550 350 700 500])
 set(findall(gcf,'-property','FontSize'),'FontSize',17)
@@ -890,11 +907,11 @@ lgd.Position(1) = lgd.Position(1)+.01;
 lgd.Position(2) = lgd.Position(2)+.01;
 %% exporting
 
-path = 'C:/Users/thekn/Pictures/Article1/';
-
-for i = 1:length(names)
-    if ishandle(i)
-        figure(i)
-        export_fig([path,names{i}],'-png','-transparent','-m5')
-    end
-end
+% path = 'C:/Users/thekn/Pictures/Article1/';
+% 
+% for i = 1:length(names)
+%     if ishandle(i)
+%         figure(i)
+%         export_fig([path,names{i}],'-png','-transparent','-m5')
+%     end
+% end
