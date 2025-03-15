@@ -1,4 +1,4 @@
-nump = 250;
+nump = 25;
 minD = .005;
 maxD = .1;
 degree = 3;
@@ -114,7 +114,7 @@ pib.stability = CSt;
 pib.data = {ax,ay,b,c,mu,X0};
 pib.dataDesc = {'ax','ay','b','c','mu','X0'};
 pib.d = D;
-%save('PiB_d.mat','pib');
+save('PiB_d.mat','pib');
 %%
 % pib.eq = CEq;
 % pib.stability = CSt;

@@ -652,7 +652,7 @@ set(findall(gcf,'-property','interpreter'),'interpreter','latex')
 % set(findall(gcf,'-property','interpreter'),'interpreter','latex')
 %% Population for varied tau (1D)
 figure
-names{get(gcf,'number')} = 'tauVaried';
+names{get(gcf,'number')} = 'sigmaVaried';
 
 bitau = pp1d.tau((pp1d.TotPopb-pp1d.TotPops)>1);
 bipops = pp1d.TotPops((pp1d.TotPopb-pp1d.TotPops)>1);

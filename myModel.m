@@ -1,6 +1,6 @@
 function dX = myModel(t,X,ax,ay,b,c,d,mu,tau)
 
-x = max(X(1),0); y = X(2);
+x = max(X(1),0); y = max(X(2),0);
 
 fx = b - ax*x -c*tau - mu;
 fy = b - ay*y -c*tau - mu;
